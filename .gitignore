@@ -6,3 +6,4 @@ build
 *npm-debug.log
 target
 node_modules
+*.iml
