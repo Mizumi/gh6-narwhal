@@ -12,7 +12,7 @@ public class Client {
     private String gender;
     private boolean veteran;
     private String veteranInfo;
-    private String password;
+    private String key;
 
     public String getFirstName() {
         return firstName;
@@ -103,11 +103,11 @@ public class Client {
     }
 
 
-    public String getPassword() {
-        return password;
+    public String getKey() {
+        return key;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setKey(String key) {
+        this.key = key;
     }
 }
