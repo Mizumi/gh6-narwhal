@@ -19,7 +19,6 @@
 package io.alicorn.data.jongothings;
 
 import io.alicorn.data.models.Continuum;
-import org.jongo.Jongo;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,5 +47,9 @@ public class CocDbFacade {
 
     public Iterator<Continuum> getAllContinuum() {
         return JongoDriver.getCollection(COC_COLLECTION).find().as(Continuum.class);
+    }
+
+    public void deleteContinuum(String uuid) {
+        JongoDriver.getCollection(COC_COLLECTION).remove("{uuid:#}", uuid);
     }
 }
