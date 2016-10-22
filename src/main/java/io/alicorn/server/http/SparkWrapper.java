@@ -26,6 +26,7 @@ import spark.Spark;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
 
 /**
  * TODO:
@@ -45,6 +46,7 @@ public class SparkWrapper {
     @Inject
     public SparkWrapper() {
         Spark.port(9789);
+        Spark.externalStaticFileLocation("src/main/webapp/dist");
         logger.info("Spark Wrapper started.");
     }
 
