@@ -18,6 +18,8 @@
  */
 package io.alicorn.server;
 
+import io.alicorn.data.models.Agent;
+import io.alicorn.data.models.Models;
 import io.alicorn.server.sms.TwilioSMSClient;
 
 import javax.inject.Inject;
@@ -32,12 +34,24 @@ import javax.inject.Singleton;
 public class NotificationService {
 //Private//////////////////////////////////////////////////////////////////////
 
+    private final Models models;
+    private final TwilioSMSClient smsClient;
+
 //Protected////////////////////////////////////////////////////////////////////
 
 //Public///////////////////////////////////////////////////////////////////////
 
     @Inject
-    public NotificationService(TwilioSMSClient smsClient) {
+    public NotificationService(TwilioSMSClient smsClient, Models models) {
+        this.smsClient = smsClient;
+        this.models = models;
+    }
 
+    public void sendNotificationToClients(String message) {
+        models.getAllClients().forEachRemaining((client) -> {
+            if (client.getPhoneNumber() != null && !client.getPhoneNumber().isEmpty()) {
+                smsClient.sendSMSMessage(client.getPhoneNumber(), message);
+            }
+        });
     }
 }
