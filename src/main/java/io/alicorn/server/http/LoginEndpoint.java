@@ -18,6 +18,7 @@
  */
 package io.alicorn.server.http;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.alicorn.data.jongothings.UsersDbFacade;
@@ -107,9 +108,9 @@ public class LoginEndpoint {
     private String getTokenForUser(String email, String key, boolean asAgent) {
         User user;
         if (asAgent) {
-            user = usersDbFacade.getAgent(email);
+            user = usersDbFacade.getAgentByEmail(email);
         }  else {
-            user = usersDbFacade.getClient(email);
+            user = usersDbFacade.getClientByEmail(email);
         }
 
         if (user != null && user.getKey().equals(hash(key))) {
@@ -176,7 +177,7 @@ public class LoginEndpoint {
                                                          Client.class);
             if (client.getEmail() != null && client.getKey() != null) {
                 client.setKey(hash(client.getKey()));
-                if (usersDbFacade.getClient(client.getEmail()) == null) {
+                if (usersDbFacade.getClientByEmail(client.getEmail()) == null) {
                     usersDbFacade.setClient(client);
                     return new WebserviceResponse().toString();
                 } else {
@@ -184,6 +185,23 @@ public class LoginEndpoint {
                 }
             } else {
                 return new WebserviceResponse().addError("Provided client must have an email and a key (password) field.").toString();
+            }
+        });
+
+        sparkWrapper.get("/api/user/clients", (req, res) -> {
+            if (isCurrentUserAgent()) {
+                JsonArray users = new JsonArray();
+                ObjectMapper objectMapper = new ObjectMapper();
+                usersDbFacade.getAllClients().forEachRemaining((client) -> {
+                    try {
+                        users.add(JsonObject.readFrom(objectMapper.writeValueAsString(client)).remove("key"));
+                    } catch (Exception e) {
+                        logger.warn(e.getMessage(), e);
+                    }
+                });
+                return new WebserviceResponse().set("clients", users).toString();
+            } else {
+                return new WebserviceResponse().addError("Only registered agents may view users on this HMIS.");
             }
         });
 
@@ -210,7 +228,7 @@ public class LoginEndpoint {
                         Agent.class);
                 if (agent.getEmail() != null && agent.getKey() != null) {
                     agent.setKey(hash(agent.getKey()));
-                    if (usersDbFacade.getAgent(agent.getEmail()) == null) {
+                    if (usersDbFacade.getAgentByEmail(agent.getEmail()) == null) {
                         usersDbFacade.setAgent(agent);
                         return new WebserviceResponse().toString();
                     } else {
@@ -221,6 +239,23 @@ public class LoginEndpoint {
                 }
             } else {
                 return new WebserviceResponse().addError("Current agent is not authorized to create a new agent.").toString();
+            }
+        });
+
+        sparkWrapper.get("/api/user/agents", (req, res) -> {
+            if (isCurrentUserAgent()) {
+                JsonArray users = new JsonArray();
+                ObjectMapper objectMapper = new ObjectMapper();
+                usersDbFacade.getAllAgents().forEachRemaining((client) -> {
+                    try {
+                        users.add(JsonObject.readFrom(objectMapper.writeValueAsString(client)).remove("key"));
+                    } catch (Exception e) {
+                        logger.warn(e.getMessage(), e);
+                    }
+                });
+                return new WebserviceResponse().set("agents", users).toString();
+            } else {
+                return new WebserviceResponse().addError("Only registered agents may view users on this HMIS.");
             }
         });
     }

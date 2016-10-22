@@ -20,6 +20,7 @@ package io.alicorn.server.http;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,8 @@ public class WebserviceResponse {
             response.set(property, (String) value);
         } else if (value instanceof Boolean) {
             response.set(property, (Boolean) value);
+        } else if (value instanceof JsonValue) {
+            response.set(property, (JsonValue) value);
         } else {
             //TODO: #hackathonLife
             logger.error("Couldn't set property on webservice response; it isn't a supported type. Please add it around line 42 of io.alicorn.server.http.WebserviceResponse.");
