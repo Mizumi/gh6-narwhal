@@ -52,6 +52,10 @@ public class SparkWrapper {
         Spark.before(filter);
     }
 
+    public void after(Filter filter) {
+        Spark.after(filter);
+    }
+
     public void post(String path, Route route) {
         Spark.post(path, route);
     }

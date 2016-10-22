@@ -22,6 +22,8 @@ import com.eclipsesource.json.JsonObject;
 import io.alicorn.data.jongothings.JongoDriver;
 import io.alicorn.data.models.Client;
 import io.alicorn.data.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,6 +43,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Singleton
 public class LoginEndpoint {
+
+    private static final Logger logger = LoggerFactory.getLogger(LoginEndpoint.class);
 
     private Map<String, String> emailToTokenMap = new ConcurrentHashMap<>();
     private Map<String, User> tokenToUserMap = new ConcurrentHashMap<>();
@@ -135,6 +139,12 @@ public class LoginEndpoint {
             }
         });
 
+        sparkWrapper.after((req, res) -> {
+            if (threadToUserMap.containsKey(Thread.currentThread())) {
+                threadToUserMap.remove(Thread.currentThread());
+            }
+        });
+
         // Clients ////////////////////////////////////////////////////////////
         sparkWrapper.post("/api/user/client/token", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
@@ -146,5 +156,13 @@ public class LoginEndpoint {
             JsonObject json = JsonObject.readFrom(req.body());
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), true);
         });
+    }
+
+    public boolean hasCurrentUser() {
+        return threadToUserMap.containsKey(Thread.currentThread());
+    }
+
+    public User getCurrentUser() {
+        return threadToUserMap.get(Thread.currentThread());
     }
 }

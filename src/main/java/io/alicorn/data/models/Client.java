@@ -5,14 +5,12 @@ public class Client extends User {
     private String middleName;
     private String lastName;
     private String phoneNumber;
-    private String emailAddress;
     private String ssn;
     private String dob;
     private String ethnicity;
     private String gender;
     private boolean veteran;
     private String veteranInfo;
-    private String key;
 
     public String getFirstName() {
         return firstName;
@@ -44,14 +42,6 @@ public class Client extends User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
     }
 
     public String getSsn() {
@@ -102,14 +92,6 @@ public class Client extends User {
         this.veteranInfo = veteranInfo;
     }
 
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
     @Override
     public Kind getKind() {
         return Kind.CLIENT;
