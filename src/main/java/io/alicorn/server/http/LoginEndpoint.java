@@ -20,6 +20,7 @@ package io.alicorn.server.http;
 
 import com.eclipsesource.json.JsonObject;
 import io.alicorn.data.jongothings.JongoDriver;
+import io.alicorn.data.models.Agent;
 import io.alicorn.data.models.Client;
 import io.alicorn.data.models.User;
 import org.slf4j.Logger;
@@ -104,9 +105,9 @@ public class LoginEndpoint {
     private String getTokenForUser(String email, String key, boolean asAgent) {
         User user;
         if (asAgent) {
-            user = JongoDriver.getCollection("agents").findOne("{email:#}", email).as(User.class);
+            user = JongoDriver.getCollection("Agents").findOne("{email:#}", email).as(Agent.class);
         }  else {
-            user = JongoDriver.getCollection("clients").findOne("{email:#}", email).as(User.class);
+            user = JongoDriver.getCollection("Clients").findOne("{email:#}", email).as(Client.class);
         }
 
         if (user.getKey().equals(hash(key))) {
