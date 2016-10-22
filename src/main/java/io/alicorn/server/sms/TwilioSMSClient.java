@@ -18,18 +18,49 @@
  */
 package io.alicorn.server.sms;
 
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+import io.alicorn.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * TODO:
  *
  * @author Brandon Sanders [brandon@alicorn.io]
  */
+@Singleton
 public class TwilioSMSClient {
 //Private//////////////////////////////////////////////////////////////////////
+
+    private static final Logger logger = LoggerFactory.getLogger(TwilioSMSClient.class);
+
+    private final String ACCOUNT_SID;
+    private final String AUTH_TOKEN;
 
 //Protected////////////////////////////////////////////////////////////////////
 
 //Public///////////////////////////////////////////////////////////////////////
 
-    public static final String ACCOUNT_SID = "ACecd88b29b86fc4357ffe4c9ab9cebb8b";
-    public static final String AUTH_TOKEN = "";
+    public static final String TWILIO_PHONE_NUMBER = "+13143100157";
+
+    @Inject
+    public TwilioSMSClient(Config config) {
+        ACCOUNT_SID = config.getTwilioAccountSID();
+        AUTH_TOKEN = config.getTwilioAuthToken();
+
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+    }
+
+    public Message sendMessage(String toNumber, String message) {
+        logger.info("Sending message {} to {}", message, toNumber);
+        return Message
+                .creator(new PhoneNumber(toNumber),
+                         new PhoneNumber(TWILIO_PHONE_NUMBER),
+                         message).create();
+    }
 }

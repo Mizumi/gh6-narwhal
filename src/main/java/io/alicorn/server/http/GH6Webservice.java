@@ -18,6 +18,7 @@
  */
 package io.alicorn.server.http;
 
+import io.alicorn.server.sms.TwilioSMSClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
