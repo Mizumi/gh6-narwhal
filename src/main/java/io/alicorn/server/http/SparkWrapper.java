@@ -28,6 +28,8 @@ import spark.Spark;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO:
@@ -40,6 +42,8 @@ public class SparkWrapper {
 
     private static final Logger logger = LoggerFactory.getLogger(SparkWrapper.class);
 
+    private static final List<String> endpoints = new ArrayList<String>();
+
 //Protected////////////////////////////////////////////////////////////////////
 
 //Public///////////////////////////////////////////////////////////////////////
@@ -48,6 +52,20 @@ public class SparkWrapper {
     public SparkWrapper() {
         Spark.port(9789);
         Spark.externalStaticFileLocation("src/main/webapp/dist");
+        Spark.get("/api/endpoints", (req, res) -> {
+            res.type("text/html");
+            StringBuilder html = new StringBuilder();
+            html.append("<HTML><body>");
+            html.append("<h1>GH6 Endpoints (Remove in production)</h1>");
+            html.append("<ul>");
+            for (String endpoint : endpoints) {
+                html.append("<li>").append(endpoint).append("</li>");
+            }
+            html.append("</ul>");
+            html.append("</body></HTML>");
+
+            return html.toString();
+        });
         logger.info("Spark Wrapper started.");
     }
 
@@ -61,10 +79,12 @@ public class SparkWrapper {
 
     public void post(String path, Route route) {
         Spark.post(path, route);
+        endpoints.add("POST >>> " + path);
     }
 
     public void get(String path, Route route) {
         Spark.get(path, route);
+        endpoints.add("GET >>> " + path);
     }
 
     public void exception(Class<? extends Exception> e, ExceptionHandler exceptionHandler) {

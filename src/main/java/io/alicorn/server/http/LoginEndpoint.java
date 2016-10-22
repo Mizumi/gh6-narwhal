@@ -168,7 +168,7 @@ public class LoginEndpoint {
             return new WebserviceResponse().toString();
         });
 
-        sparkWrapper.post("/api/user/client/create", (req, res) -> {
+        sparkWrapper.post("/api/user/clients", (req, res) -> {
             Client client = new ObjectMapper().readValue(JsonObject.readFrom(req.body()).asObject().get("client").toString(),
                                                          Client.class);
             if (client.getEmail() != null && client.getKey() != null) {
@@ -195,7 +195,7 @@ public class LoginEndpoint {
         });
 
         // TODO: Copy-pasta from above.
-        sparkWrapper.post("/api/user/agent/create", (req, res) -> {
+        sparkWrapper.post("/api/user/agents", (req, res) -> {
             if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
                 Agent agent = new ObjectMapper().readValue(
                         JsonObject.readFrom(req.body()).asObject().get("agent").toString(),
