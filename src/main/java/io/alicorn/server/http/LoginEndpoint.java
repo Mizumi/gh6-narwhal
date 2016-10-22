@@ -18,11 +18,18 @@
  */
 package io.alicorn.server.http;
 
+import com.eclipsesource.json.JsonObject;
 import io.alicorn.data.jongothings.JongoDriver;
 import io.alicorn.data.models.Client;
+import io.alicorn.data.models.User;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,44 +43,108 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LoginEndpoint {
 
     private Map<String, String> emailToTokenMap = new ConcurrentHashMap<>();
-    private Map<String, String> tokenToIdMap = new ConcurrentHashMap<>();
-    private Map<Thread, String> threadToIdMap = new ConcurrentHashMap<>();
+    private Map<String, User> tokenToUserMap = new ConcurrentHashMap<>();
+    private Map<Thread, User> threadToUserMap = new ConcurrentHashMap<>();
 
-    private String getTokenForUser(String email, boolean asAgent) {
-        if (asAgent) {
-            Agent agent = JongoDriver.getCollection("agents").findOne("{email:#}", email).as(Agent.class);
-            if (emailToTokenMap.containsKey(email)) {
-                return emailToTokenMap.get(email);
-            } else {
-                String uuid = UUID.randomUUID().toString();
-                emailToTokenMap.put(email, uuid);
-                return uuid;
+    public static final Charset charset = Charset.forName("ISO-8859-1");
+
+    public static String hash(byte[] bytes) {
+        try {
+            //Create the message digest.
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            digest.update(bytes);
+
+            //Hash the bytes.
+            byte[] hashed = digest.digest();
+
+            //Translate the bytes into a hexadecimal string.
+            StringBuilder hexString = new StringBuilder();
+            for (byte aHashed : hashed) {
+                String hex = Integer.toHexString(0xff & aHashed);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
             }
-        } else {
-            Client client = JongoDriver.getCollection("clients").findOne("{email:#}", email).as(Client.class);
+
+            return hexString.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String hash(char[] chars) {
+        //Parse chars into bytes for hashing.
+        CharBuffer charBuffer = CharBuffer.wrap(chars);
+        ByteBuffer byteBuffer = charset.encode(charBuffer);
+        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
+                                          byteBuffer.position(),
+                                          byteBuffer.limit());
+
+        //Clear temporary arrays of any data.
+        Arrays.fill(charBuffer.array(), '\u0000');
+        Arrays.fill(byteBuffer.array(), (byte) 0);
+
+        //Generate the SHA-256 hash.
+        String hash = hash(bytes);
+
+        //Clear remaining arrays of any data.
+        Arrays.fill(bytes, (byte) 0);
+
+        return hash;
+    }
+
+    public static String hash(String string) {
+        return hash(string.getBytes(charset));
+    }
+
+    private String getTokenForUser(String email, String key, boolean asAgent) {
+        User user;
+        if (asAgent) {
+            user = JongoDriver.getCollection("agents").findOne("{email:#}", email).as(User.class);
+        }  else {
+            user = JongoDriver.getCollection("clients").findOne("{email:#}", email).as(User.class);
+        }
+
+        if (user.getKey().equals(hash(key))) {
             if (emailToTokenMap.containsKey(email)) {
                 return emailToTokenMap.get(email);
             } else {
                 String uuid = UUID.randomUUID().toString();
                 emailToTokenMap.put(email, uuid);
+                tokenToUserMap.put(uuid, user);
                 return uuid;
             }
         }
 
-        return "";
+        return "U sux";
     }
 
     @Inject
     public LoginEndpoint(SparkWrapper sparkWrapper) {
 
+        sparkWrapper.before((req, res) -> {
+            try {
+                JsonObject json = JsonObject.readFrom(req.body()).asObject();
+                if (json.get("key") != null) {
+                    if (tokenToUserMap.containsKey(json.get("key").asString())) {
+                        threadToUserMap.put(Thread.currentThread(), tokenToUserMap.get(json.get("key").asString()));
+                    }
+                }
+            } catch (Exception e) {
+                logger.warn(e.getMessage(), e);
+            }
+        });
+
         // Clients ////////////////////////////////////////////////////////////
         sparkWrapper.post("/api/user/client/token", (req, res) -> {
-
+            JsonObject json = JsonObject.readFrom(req.body());
+            return getTokenForUser(json.get("email").asString(), json.get("key").asString(), false);
         });
 
         // Agents /////////////////////////////////////////////////////////////
         sparkWrapper.post("/api/user/agent/token", (req, res) -> {
-
+            JsonObject json = JsonObject.readFrom(req.body());
+            return getTokenForUser(json.get("email").asString(), json.get("key").asString(), true);
         });
     }
 }

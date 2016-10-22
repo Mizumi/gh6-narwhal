@@ -1,6 +1,6 @@
 package io.alicorn.data.models;
 
-public class Agent {
+public class Agent extends User {
     private String email;
     private String password;
 
@@ -18,5 +18,10 @@ public class Agent {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public Kind getKind() {
+        return Kind.AGENT;
     }
 }

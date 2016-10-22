@@ -1,6 +1,6 @@
 package io.alicorn.data.models;
 
-public class Client {
+public class Client extends User {
     private String firstName;
     private String middleName;
     private String lastName;
@@ -109,5 +109,10 @@ public class Client {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    @Override
+    public Kind getKind() {
+        return Kind.CLIENT;
+
     }
 }
