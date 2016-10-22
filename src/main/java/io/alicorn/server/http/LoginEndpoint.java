@@ -112,12 +112,12 @@ public class LoginEndpoint {
 
         if (user.getKey().equals(hash(key))) {
             if (emailToTokenMap.containsKey(email)) {
-                return emailToTokenMap.get(email);
+                return new WebserviceResponse().set("token", emailToTokenMap.get(email)).toString();
             } else {
                 String uuid = UUID.randomUUID().toString();
                 emailToTokenMap.put(email, uuid);
                 tokenToUserMap.put(uuid, user);
-                return uuid;
+                return new WebserviceResponse().set("token", uuid).toString();
             }
         }
 
@@ -157,22 +157,24 @@ public class LoginEndpoint {
             String token = emailToTokenMap.get(email);
             emailToTokenMap.remove(email);
             tokenToUserMap.remove(token);
-            return "{errors: []}";
+            return new WebserviceResponse().toString();
         });
 
         sparkWrapper.post("/api/user/client/create", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
                 JsonObject user = json.get("user").asObject();
-                if (user.get("email") != null && user.get("password") != null) {
-                    user.set("password", hash(user.get("password").asString()));
+                if (user.get("email") != null && user.get("key") != null) {
+                    user.set("key", hash(user.get("key").asString()));
                     JongoDriver.getCollection("Clients").update("{email:#}",
                                                                 user.get("email").asString()).upsert().with(user.toString());
-                    return "{errors: []}";
+                    return new WebserviceResponse().toString();
+                } else {
+                    return new WebserviceResponse().addError("Provided user must have an email and a key (password) field.").toString();
                 }
+            } else {
+                return new WebserviceResponse().addError("Current user is not authorized to create a new user.").toString();
             }
-
-            return "U SUCK";
         });
 
         // Agents /////////////////////////////////////////////////////////////
@@ -186,7 +188,7 @@ public class LoginEndpoint {
             String token = emailToTokenMap.get(email);
             emailToTokenMap.remove(email);
             tokenToUserMap.remove(token);
-            return "{errors: []}";
+            return new WebserviceResponse().toString();
         });
     }
 
