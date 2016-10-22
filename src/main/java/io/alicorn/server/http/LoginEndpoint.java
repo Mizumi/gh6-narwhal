@@ -20,6 +20,7 @@ package io.alicorn.server.http;
 
 import com.eclipsesource.json.JsonObject;
 import io.alicorn.data.jongothings.JongoDriver;
+import io.alicorn.data.models.Agent;
 import io.alicorn.data.models.Client;
 import io.alicorn.data.models.User;
 import org.slf4j.Logger;
@@ -104,19 +105,19 @@ public class LoginEndpoint {
     private String getTokenForUser(String email, String key, boolean asAgent) {
         User user;
         if (asAgent) {
-            user = JongoDriver.getCollection("agents").findOne("{email:#}", email).as(User.class);
+            user = JongoDriver.getCollection("Agents").findOne("{email:#}", email).as(Agent.class);
         }  else {
-            user = JongoDriver.getCollection("clients").findOne("{email:#}", email).as(User.class);
+            user = JongoDriver.getCollection("Clients").findOne("{email:#}", email).as(Client.class);
         }
 
         if (user.getKey().equals(hash(key))) {
             if (emailToTokenMap.containsKey(email)) {
-                return emailToTokenMap.get(email);
+                return new WebserviceResponse().set("token", emailToTokenMap.get(email)).toString();
             } else {
                 String uuid = UUID.randomUUID().toString();
                 emailToTokenMap.put(email, uuid);
                 tokenToUserMap.put(uuid, user);
-                return uuid;
+                return new WebserviceResponse().set("token", uuid).toString();
             }
         }
 
@@ -129,9 +130,9 @@ public class LoginEndpoint {
         sparkWrapper.before((req, res) -> {
             try {
                 JsonObject json = JsonObject.readFrom(req.body()).asObject();
-                if (json.get("key") != null) {
-                    if (tokenToUserMap.containsKey(json.get("key").asString())) {
-                        threadToUserMap.put(Thread.currentThread(), tokenToUserMap.get(json.get("key").asString()));
+                if (json.get("token") != null) {
+                    if (tokenToUserMap.containsKey(json.get("token").asString())) {
+                        threadToUserMap.put(Thread.currentThread(), tokenToUserMap.get(json.get("token").asString()));
                     }
                 }
             } catch (Exception e) {
@@ -146,15 +147,66 @@ public class LoginEndpoint {
         });
 
         // Clients ////////////////////////////////////////////////////////////
-        sparkWrapper.post("/api/user/client/token", (req, res) -> {
+        sparkWrapper.post("/api/user/client/login", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), false);
         });
+        sparkWrapper.post("/api/user/client/logout", (req, res) -> {
+            JsonObject json = JsonObject.readFrom(req.body());
+            String email = json.get("email").asString();
+            String token = emailToTokenMap.get(email);
+            emailToTokenMap.remove(email);
+            tokenToUserMap.remove(token);
+            return new WebserviceResponse().toString();
+        });
+
+        sparkWrapper.post("/api/user/client/create", (req, res) -> {
+            JsonObject json = JsonObject.readFrom(req.body());
+            if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
+                JsonObject user = json.get("client").asObject();
+                if (user.get("email") != null && user.get("key") != null) {
+                    user.set("key", hash(user.get("key").asString()));
+                    JongoDriver.getCollection("Clients").update("{email:#}",
+                                                                user.get("email").asString()).upsert().with(user.toString());
+                    return new WebserviceResponse().toString();
+                } else {
+                    return new WebserviceResponse().addError("Provided client must have an email and a key (password) field.").toString();
+                }
+            } else {
+                return new WebserviceResponse().addError("Current client is not authorized to create a new client.").toString();
+            }
+        });
 
         // Agents /////////////////////////////////////////////////////////////
-        sparkWrapper.post("/api/user/agent/token", (req, res) -> {
+        sparkWrapper.post("/api/user/agent/login", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), true);
+        });
+        sparkWrapper.post("/api/user/agent/logout", (req, res) -> {
+            JsonObject json = JsonObject.readFrom(req.body());
+            String email = json.get("email").asString();
+            String token = emailToTokenMap.get(email);
+            emailToTokenMap.remove(email);
+            tokenToUserMap.remove(token);
+            return new WebserviceResponse().toString();
+        });
+
+        // TODO: Copy-pasta from above.
+        sparkWrapper.post("/api/user/agent/create", (req, res) -> {
+            JsonObject json = JsonObject.readFrom(req.body());
+            if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
+                JsonObject user = json.get("agent").asObject();
+                if (user.get("email") != null && user.get("key") != null) {
+                    user.set("key", hash(user.get("key").asString()));
+                    JongoDriver.getCollection("Agents").update("{email:#}",
+                                                                user.get("email").asString()).upsert().with(user.toString());
+                    return new WebserviceResponse().toString();
+                } else {
+                    return new WebserviceResponse().addError("Provided agent must have an email and a key (password) field.").toString();
+                }
+            } else {
+                return new WebserviceResponse().addError("Current agent is not authorized to create a new agent.").toString();
+            }
         });
     }
 
