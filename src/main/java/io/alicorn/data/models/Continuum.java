@@ -5,15 +5,28 @@ import io.alicorn.data.models.services.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class Continuum {
     private enum Specialty {
         SingleMen, SingleWomen, Veteran, WomenWithChildren, Families, Youth
     }
 
+    private String uuid;
     private Set<Specialty> specialties;
     private List<Service> services;
     private ContactInfo contactInfo;
+
+    public String getUuid() {
+        if (uuid == null || uuid.isEmpty()) {
+            uuid = "CONTINUUM" + UUID.randomUUID().toString();
+        }
+        return this.uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public Set<Specialty> getSpecialties() {
         return specialties;

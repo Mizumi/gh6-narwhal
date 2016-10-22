@@ -20,9 +20,9 @@ package io.alicorn.server.http;
 
 import com.eclipsesource.json.JsonObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.alicorn.data.jongothings.UsersDbFacade;
 import io.alicorn.data.models.Agent;
 import io.alicorn.data.models.Client;
-import io.alicorn.data.models.Models;
 import io.alicorn.data.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ public class LoginEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginEndpoint.class);
 
-    private final Models models;
+    private final UsersDbFacade usersDbFacade;
     private Map<String, String> emailToTokenMap = new ConcurrentHashMap<>();
     private Map<String, User> tokenToUserMap = new ConcurrentHashMap<>();
     private Map<Thread, User> threadToUserMap = new ConcurrentHashMap<>();
@@ -107,9 +107,9 @@ public class LoginEndpoint {
     private String getTokenForUser(String email, String key, boolean asAgent) {
         User user;
         if (asAgent) {
-            user = models.getAgent(email);
+            user = usersDbFacade.getAgent(email);
         }  else {
-            user = models.getClient(email);
+            user = usersDbFacade.getClient(email);
         }
 
         if (user != null && user.getKey().equals(hash(key))) {
@@ -127,9 +127,9 @@ public class LoginEndpoint {
     }
 
     @Inject
-    public LoginEndpoint(SparkWrapper sparkWrapper, Models models) {
+    public LoginEndpoint(SparkWrapper sparkWrapper, UsersDbFacade usersDbFacade) {
 
-        this.models = models;
+        this.usersDbFacade = usersDbFacade;
 
         sparkWrapper.exception(Exception.class, (e, req, res) -> {
             logger.error("Spark Error: " + e.getMessage(), e);
@@ -175,7 +175,7 @@ public class LoginEndpoint {
                                                          Client.class);
             if (client.getEmail() != null && client.getKey() != null) {
                 client.setKey(hash(client.getKey()));
-                models.setClient(client.getEmail(), client);
+                usersDbFacade.setClient(client);
                 return new WebserviceResponse().toString();
             } else {
                 return new WebserviceResponse().addError("Provided client must have an email and a key (password) field.").toString();
@@ -204,7 +204,7 @@ public class LoginEndpoint {
                         Agent.class);
                 if (agent.getEmail() != null && agent.getKey() != null) {
                     agent.setKey(hash(agent.getKey()));
-                    models.setAgent(agent.getEmail(), agent);
+                    usersDbFacade.setAgent(agent);
                     return new WebserviceResponse().toString();
                 } else {
                     return new WebserviceResponse().addError("Provided agent must have an email and a key (password) field.").toString();

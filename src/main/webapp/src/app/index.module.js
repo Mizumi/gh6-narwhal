@@ -33,7 +33,8 @@ const App = angular.module(
     require("./pages/coc/coc.module").name
 
   ]
-);
+)
+.value('user', {})
 
 App
   .config(config)

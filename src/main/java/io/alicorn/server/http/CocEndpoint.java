@@ -1,6 +1,6 @@
 /*
  * Project: gh6
- * Since: Oct 21, 2016
+ * Since: Oct 22, 2016
  *
  * Copyright (c) Brandon Sanders [brandon@alicorn.io]
  *
@@ -18,29 +18,19 @@
  */
 package io.alicorn.server.http;
 
-import io.alicorn.server.sms.TwilioSMSClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * TODO:
+ *
+ * @author Brandon Sanders [brandon@alicorn.io]
+ */
 @Singleton
-public class GH6Webservice {
-
-    private static final Logger logger = LoggerFactory.getLogger(GH6Webservice.class);
+public class CocEndpoint {
 
     @Inject
-    protected LoginEndpoint loginEndpoint;
+    public CocEndpoint(SparkWrapper sparkWrapper) {
 
-    @Inject
-    protected NotificationsEndpoint notificationsEndpoint;
-
-    @Inject
-    protected CocEndpoint cocEndpoint;
-
-    @Inject
-    public GH6Webservice(SparkWrapper sparkWrapper) {
-        logger.info("Webservice started.");
     }
 }

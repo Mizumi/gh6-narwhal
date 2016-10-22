@@ -16,9 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.alicorn.data.models;
+package io.alicorn.data.jongothings;
 
 import io.alicorn.data.jongothings.JongoDriver;
+import io.alicorn.data.models.Agent;
+import io.alicorn.data.models.Client;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,15 +33,15 @@ import java.util.List;
  * @author Brandon Sanders [brandon@alicorn.io]
  */
 @Singleton
-public class Models {
+public class UsersDbFacade {
 
     public static final String AGENTS_COLLECTION = "Agents";
     public static final String CLIENTS_COLLECTION = "Clients";
 
     @Inject
-    public Models() { }
+    public UsersDbFacade() { }
 
-    public void setAgent(String email, Agent agent) {
+    public void setAgent(Agent agent) {
         JongoDriver.getCollection(AGENTS_COLLECTION).update("{email:#}", agent.getEmail()).upsert().with(agent);
     }
 
@@ -51,7 +53,7 @@ public class Models {
         return JongoDriver.getCollection(AGENTS_COLLECTION).find().as(Agent.class);
     }
 
-    public void setClient(String email, Client client) {
+    public void setClient(Client client) {
         JongoDriver.getCollection(CLIENTS_COLLECTION).update("{email:#}", client.getEmail()).upsert().with(client);
     }
 
