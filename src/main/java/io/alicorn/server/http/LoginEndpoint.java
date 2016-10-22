@@ -175,8 +175,12 @@ public class LoginEndpoint {
                                                          Client.class);
             if (client.getEmail() != null && client.getKey() != null) {
                 client.setKey(hash(client.getKey()));
-                usersDbFacade.setClient(client);
-                return new WebserviceResponse().toString();
+                if (usersDbFacade.getClient(client.getEmail()) == null) {
+                    usersDbFacade.setClient(client);
+                    return new WebserviceResponse().toString();
+                } else {
+                    return new WebserviceResponse().addError("Another client already exists with the given email address.").toString();
+                }
             } else {
                 return new WebserviceResponse().addError("Provided client must have an email and a key (password) field.").toString();
             }
@@ -204,8 +208,12 @@ public class LoginEndpoint {
                         Agent.class);
                 if (agent.getEmail() != null && agent.getKey() != null) {
                     agent.setKey(hash(agent.getKey()));
-                    usersDbFacade.setAgent(agent);
-                    return new WebserviceResponse().toString();
+                    if (usersDbFacade.getAgent(agent.getEmail()) == null) {
+                        usersDbFacade.setAgent(agent);
+                        return new WebserviceResponse().toString();
+                    } else {
+                        return new WebserviceResponse().addError("Another agent already exists with the given email address.").toString();
+                    }
                 } else {
                     return new WebserviceResponse().addError("Provided agent must have an email and a key (password) field.").toString();
                 }
