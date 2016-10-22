@@ -147,9 +147,17 @@ public class LoginEndpoint {
         });
 
         // Clients ////////////////////////////////////////////////////////////
-        sparkWrapper.post("/api/user/client/token", (req, res) -> {
+        sparkWrapper.post("/api/user/client/login", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), false);
+        });
+        sparkWrapper.post("/api/user/client/logout", (req, res) -> {
+            JsonObject json = JsonObject.readFrom(req.body());
+            String email = json.get("email").asString();
+            String token = emailToTokenMap.get(email);
+            emailToTokenMap.remove(email);
+            tokenToUserMap.remove(token);
+            return "{errors: []}";
         });
 
         sparkWrapper.post("/api/user/client/create", (req, res) -> {
@@ -160,7 +168,7 @@ public class LoginEndpoint {
                     user.set("password", hash(user.get("password").asString()));
                     JongoDriver.getCollection("Clients").update("{email:#}",
                                                                 user.get("email").asString()).upsert().with(user.toString());
-                    return "Created user!";
+                    return "{errors: []}";
                 }
             }
 
@@ -168,9 +176,17 @@ public class LoginEndpoint {
         });
 
         // Agents /////////////////////////////////////////////////////////////
-        sparkWrapper.post("/api/user/agent/token", (req, res) -> {
+        sparkWrapper.post("/api/user/agent/login", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), true);
+        });
+        sparkWrapper.post("/api/user/agent/logout", (req, res) -> {
+            JsonObject json = JsonObject.readFrom(req.body());
+            String email = json.get("email").asString();
+            String token = emailToTokenMap.get(email);
+            emailToTokenMap.remove(email);
+            tokenToUserMap.remove(token);
+            return "{errors: []}";
         });
     }
 
