@@ -130,9 +130,9 @@ public class LoginEndpoint {
         sparkWrapper.before((req, res) -> {
             try {
                 JsonObject json = JsonObject.readFrom(req.body()).asObject();
-                if (json.get("key") != null) {
-                    if (tokenToUserMap.containsKey(json.get("key").asString())) {
-                        threadToUserMap.put(Thread.currentThread(), tokenToUserMap.get(json.get("key").asString()));
+                if (json.get("token") != null) {
+                    if (tokenToUserMap.containsKey(json.get("token").asString())) {
+                        threadToUserMap.put(Thread.currentThread(), tokenToUserMap.get(json.get("token").asString()));
                     }
                 }
             } catch (Exception e) {
@@ -150,6 +150,20 @@ public class LoginEndpoint {
         sparkWrapper.post("/api/user/client/token", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), false);
+        });
+
+        sparkWrapper.post("/api/users", (req, res) -> {
+            JsonObject json = JsonObject.readFrom(req.body());
+            if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
+                JsonObject user = json.get("user").asObject();
+                if (user.get("email") != null && user.get("password") != null) {
+                    JongoDriver.getCollection("Clients").update("{email:#}",
+                                                                user.get("email").asString()).upsert().with(user.toString());
+                    return "Created user!";
+                }
+            }
+
+            return "U SUCK";
         });
 
         // Agents /////////////////////////////////////////////////////////////
