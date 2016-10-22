@@ -3,8 +3,6 @@
 import mainTpl from './main.html';
 import mainCtrl from './main.controller.js';
 
-console.log(mainCtrl);
-
 function routeConfig($stateProvider) {
   'ngInject';
 
