@@ -169,18 +169,14 @@ public class LoginEndpoint {
         });
 
         sparkWrapper.post("/api/user/client/create", (req, res) -> {
-            if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
-                Client client = new ObjectMapper().readValue(JsonObject.readFrom(req.body()).asObject().get("client").toString(),
-                                                             Client.class);
-                if (client.getEmail() != null && client.getKey() != null) {
-                    client.setKey(hash(client.getKey()));
-                    models.setClient(client.getEmail(), client);
-                    return new WebserviceResponse().toString();
-                } else {
-                    return new WebserviceResponse().addError("Provided client must have an email and a key (password) field.").toString();
-                }
+            Client client = new ObjectMapper().readValue(JsonObject.readFrom(req.body()).asObject().get("client").toString(),
+                                                         Client.class);
+            if (client.getEmail() != null && client.getKey() != null) {
+                client.setKey(hash(client.getKey()));
+                models.setClient(client.getEmail(), client);
+                return new WebserviceResponse().toString();
             } else {
-                return new WebserviceResponse().addError("Current client is not authorized to create a new client.").toString();
+                return new WebserviceResponse().addError("Provided client must have an email and a key (password) field.").toString();
             }
         });
 
