@@ -1,6 +1,6 @@
 /*
  * Project: gh6
- * Since: Oct 21, 2016
+ * Since: Oct 22, 2016
  *
  * Copyright (c) Brandon Sanders [brandon@alicorn.io]
  *
@@ -16,18 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.alicorn.server.http;
+package io.alicorn.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import spark.ExceptionHandler;
-import spark.Filter;
-import spark.Route;
-import spark.Spark;
+import io.alicorn.server.sms.TwilioSMSClient;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.File;
 
 /**
  * TODO:
@@ -35,39 +29,15 @@ import java.io.File;
  * @author Brandon Sanders [brandon@alicorn.io]
  */
 @Singleton
-public class SparkWrapper {
+public class NotificationService {
 //Private//////////////////////////////////////////////////////////////////////
-
-    private static final Logger logger = LoggerFactory.getLogger(SparkWrapper.class);
 
 //Protected////////////////////////////////////////////////////////////////////
 
 //Public///////////////////////////////////////////////////////////////////////
 
     @Inject
-    public SparkWrapper() {
-        Spark.port(9789);
-        Spark.externalStaticFileLocation("src/main/webapp/dist");
-        logger.info("Spark Wrapper started.");
-    }
+    public NotificationService(TwilioSMSClient smsClient) {
 
-    public void before(Filter filter) {
-        Spark.before(filter);
-    }
-
-    public void after(Filter filter) {
-        Spark.after(filter);
-    }
-
-    public void post(String path, Route route) {
-        Spark.post(path, route);
-    }
-
-    public void get(String path, Route route) {
-        Spark.get(path, route);
-    }
-
-    public void exception(Class<? extends Exception> e, ExceptionHandler exceptionHandler) {
-        Spark.exception(e, exceptionHandler);
     }
 }

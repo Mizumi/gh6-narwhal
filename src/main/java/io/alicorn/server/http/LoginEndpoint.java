@@ -19,9 +19,10 @@
 package io.alicorn.server.http;
 
 import com.eclipsesource.json.JsonObject;
-import io.alicorn.data.jongothings.JongoDriver;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.alicorn.data.models.Agent;
 import io.alicorn.data.models.Client;
+import io.alicorn.data.models.Models;
 import io.alicorn.data.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,7 @@ public class LoginEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginEndpoint.class);
 
+    private final Models models;
     private Map<String, String> emailToTokenMap = new ConcurrentHashMap<>();
     private Map<String, User> tokenToUserMap = new ConcurrentHashMap<>();
     private Map<Thread, User> threadToUserMap = new ConcurrentHashMap<>();
@@ -105,12 +107,12 @@ public class LoginEndpoint {
     private String getTokenForUser(String email, String key, boolean asAgent) {
         User user;
         if (asAgent) {
-            user = JongoDriver.getCollection("Agents").findOne("{email:#}", email).as(Agent.class);
+            user = models.getAgent(email);
         }  else {
-            user = JongoDriver.getCollection("Clients").findOne("{email:#}", email).as(Client.class);
+            user = models.getClient(email);
         }
 
-        if (user.getKey().equals(hash(key))) {
+        if (user != null && user.getKey().equals(hash(key))) {
             if (emailToTokenMap.containsKey(email)) {
                 return new WebserviceResponse().set("token", emailToTokenMap.get(email)).toString();
             } else {
@@ -119,13 +121,19 @@ public class LoginEndpoint {
                 tokenToUserMap.put(uuid, user);
                 return new WebserviceResponse().set("token", uuid).toString();
             }
+        } else {
+            return new WebserviceResponse().addError("Specified user does not exist or an incorrect password was given.").toString();
         }
-
-        return "U sux";
     }
 
     @Inject
-    public LoginEndpoint(SparkWrapper sparkWrapper) {
+    public LoginEndpoint(SparkWrapper sparkWrapper, Models models) {
+
+        this.models = models;
+
+        sparkWrapper.exception(Exception.class, (e, req, res) -> {
+            logger.error("Spark Error: " + e.getMessage(), e);
+        });
 
         sparkWrapper.before((req, res) -> {
             try {
@@ -161,13 +169,12 @@ public class LoginEndpoint {
         });
 
         sparkWrapper.post("/api/user/client/create", (req, res) -> {
-            JsonObject json = JsonObject.readFrom(req.body());
             if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
-                JsonObject user = json.get("client").asObject();
-                if (user.get("email") != null && user.get("key") != null) {
-                    user.set("key", hash(user.get("key").asString()));
-                    JongoDriver.getCollection("Clients").update("{email:#}",
-                                                                user.get("email").asString()).upsert().with(user.toString());
+                Client client = new ObjectMapper().readValue(JsonObject.readFrom(req.body()).asObject().get("client").toString(),
+                                                             Client.class);
+                if (client.getEmail() != null && client.getKey() != null) {
+                    client.setKey(hash(client.getKey()));
+                    models.setClient(client.getEmail(), client);
                     return new WebserviceResponse().toString();
                 } else {
                     return new WebserviceResponse().addError("Provided client must have an email and a key (password) field.").toString();
@@ -193,13 +200,13 @@ public class LoginEndpoint {
 
         // TODO: Copy-pasta from above.
         sparkWrapper.post("/api/user/agent/create", (req, res) -> {
-            JsonObject json = JsonObject.readFrom(req.body());
             if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
-                JsonObject user = json.get("agent").asObject();
-                if (user.get("email") != null && user.get("key") != null) {
-                    user.set("key", hash(user.get("key").asString()));
-                    JongoDriver.getCollection("Agents").update("{email:#}",
-                                                                user.get("email").asString()).upsert().with(user.toString());
+                Agent agent = new ObjectMapper().readValue(
+                        JsonObject.readFrom(req.body()).asObject().get("agent").toString(),
+                        Agent.class);
+                if (agent.getEmail() != null && agent.getKey() != null) {
+                    agent.setKey(hash(agent.getKey()));
+                    models.setAgent(agent.getEmail(), agent);
                     return new WebserviceResponse().toString();
                 } else {
                     return new WebserviceResponse().addError("Provided agent must have an email and a key (password) field.").toString();
