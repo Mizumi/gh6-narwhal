@@ -1,6 +1,9 @@
 package io.alicorn.data.models;
 
 
+import io.alicorn.data.models.services.Service;
+
+import java.util.List;
 import java.util.Set;
 
 public class Continuum {
@@ -8,34 +11,9 @@ public class Continuum {
         SingleMen, SingleWomen, Veteran, WomenWithChildren, Families, Youth
     }
 
-    private String name;
-    private String address;
-    private String phoneNumber;
     private Set<Specialty> specialties;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+    private List<Service> services;
+    private ContactInfo contactInfo;
 
     public Set<Specialty> getSpecialties() {
         return specialties;
@@ -51,5 +29,29 @@ public class Continuum {
 
     public void removeSpecialty(Specialty specialty) {
         this.specialties.remove(specialty);
+    }
+
+    public List<Service> getServices() {
+        return services;
+    }
+
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
+
+    public void addService(Service service) {
+        this.services.add(service);
+    }
+
+    public void removeService(Service service) {
+        this.services.removeIf(s -> s.getUuid().equals(service.getUuid()));
+    }
+
+    public ContactInfo getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(ContactInfo contactInfo) {
+        this.contactInfo = contactInfo;
     }
 }

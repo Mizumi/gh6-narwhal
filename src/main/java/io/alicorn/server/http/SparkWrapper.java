@@ -52,6 +52,7 @@ public class SparkWrapper {
     public SparkWrapper() {
         Spark.port(9789);
         Spark.externalStaticFileLocation("src/main/webapp/dist");
+
         Spark.get("/api/endpoints", (req, res) -> {
             res.type("text/html");
             StringBuilder html = new StringBuilder();
@@ -66,6 +67,15 @@ public class SparkWrapper {
 
             return html.toString();
         });
+
+        Spark.before((req, res) -> {
+            logger.info("Receiving {} request for {}", req.requestMethod(), req.url());
+        });
+
+        Spark.after((req, res) -> {
+            logger.info("Returning {} for {} request for {}", res.body(), req.requestMethod(), req.url());
+        });
+
         logger.info("Spark Wrapper started.");
     }
 
