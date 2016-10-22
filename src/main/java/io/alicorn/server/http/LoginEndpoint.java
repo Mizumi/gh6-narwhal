@@ -19,10 +19,12 @@
 package io.alicorn.server.http;
 
 import io.alicorn.data.jongothings.JongoDriver;
+import io.alicorn.data.models.Client;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -33,15 +35,29 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class LoginEndpoint {
 
-    private Map<String, String> idToTokenMap = new ConcurrentHashMap<>();
+    private Map<String, String> emailToTokenMap = new ConcurrentHashMap<>();
     private Map<String, String> tokenToIdMap = new ConcurrentHashMap<>();
     private Map<Thread, String> threadToIdMap = new ConcurrentHashMap<>();
 
-    private String getTokenForUser(String id, boolean isAgent) {
-        if (isAgent) {
-            JongoDriver.getCollection("agents").findOne("{id:#}", id).as(Agent.class);
+    private String getTokenForUser(String email, boolean asAgent) {
+        if (asAgent) {
+            Agent agent = JongoDriver.getCollection("agents").findOne("{email:#}", email).as(Agent.class);
+            if (emailToTokenMap.containsKey(email)) {
+                return emailToTokenMap.get(email);
+            } else {
+                String uuid = UUID.randomUUID().toString();
+                emailToTokenMap.put(email, uuid);
+                return uuid;
+            }
         } else {
-            JongoDriver.getCollection("clients").findOne("{id:#}", id).as(Client.class);
+            Client client = JongoDriver.getCollection("clients").findOne("{email:#}", email).as(Client.class);
+            if (emailToTokenMap.containsKey(email)) {
+                return emailToTokenMap.get(email);
+            } else {
+                String uuid = UUID.randomUUID().toString();
+                emailToTokenMap.put(email, uuid);
+                return uuid;
+            }
         }
 
         return "";
