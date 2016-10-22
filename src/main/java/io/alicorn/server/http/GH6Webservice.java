@@ -37,6 +37,12 @@ public class GH6Webservice {
     protected NotificationsEndpoint notificationsEndpoint;
 
     @Inject
+    protected CocEndpoint cocEndpoint;
+
+    @Inject
+    protected ServiceEndpoint serviceEndpoint;
+
+    @Inject
     public GH6Webservice(SparkWrapper sparkWrapper) {
         logger.info("Webservice started.");
     }

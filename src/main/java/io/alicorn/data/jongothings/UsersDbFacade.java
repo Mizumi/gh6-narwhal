@@ -16,9 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.alicorn.data.models;
+package io.alicorn.data.jongothings;
 
+import com.mongodb.gridfs.CLI;
 import io.alicorn.data.jongothings.JongoDriver;
+import io.alicorn.data.models.Agent;
+import io.alicorn.data.models.Client;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,19 +34,23 @@ import java.util.List;
  * @author Brandon Sanders [brandon@alicorn.io]
  */
 @Singleton
-public class Models {
+public class UsersDbFacade {
 
     public static final String AGENTS_COLLECTION = "Agents";
     public static final String CLIENTS_COLLECTION = "Clients";
 
     @Inject
-    public Models() { }
+    public UsersDbFacade() { }
 
-    public void setAgent(String email, Agent agent) {
+    public void setAgent(Agent agent) {
         JongoDriver.getCollection(AGENTS_COLLECTION).update("{email:#}", agent.getEmail()).upsert().with(agent);
     }
 
-    public Agent getAgent(String email) {
+    public Agent getAgent(String uuid) {
+        return JongoDriver.getCollection(AGENTS_COLLECTION).findOne("{uuid:#}", uuid).as(Agent.class);
+    }
+
+    public Agent getAgentByEmail(String email) {
         return JongoDriver.getCollection(AGENTS_COLLECTION).findOne("{email:#}", email).as(Agent.class);
     }
 
@@ -51,11 +58,15 @@ public class Models {
         return JongoDriver.getCollection(AGENTS_COLLECTION).find().as(Agent.class);
     }
 
-    public void setClient(String email, Client client) {
+    public void setClient(Client client) {
         JongoDriver.getCollection(CLIENTS_COLLECTION).update("{email:#}", client.getEmail()).upsert().with(client);
     }
 
-    public Client getClient(String email) {
+    public Client getClient(String uuid) {
+        return JongoDriver.getCollection(CLIENTS_COLLECTION).findOne("{uuid:#}", uuid).as(Client.class);
+    }
+
+    public Client getClientByEmail(String email) {
         return JongoDriver.getCollection(CLIENTS_COLLECTION).findOne("{email:#}", email).as(Client.class);
     }
 

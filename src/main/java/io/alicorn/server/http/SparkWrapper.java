@@ -76,6 +76,11 @@ public class SparkWrapper {
             logger.info("Returning {} for {} request for {}", res.body(), req.requestMethod(), req.url());
         });
 
+        Spark.exception(Exception.class, (e, req, res) -> {
+            logger.error("Spark Error: " + e.getMessage(), e);
+            res.body(new WebserviceResponse().addError(e.getMessage()).toString());
+        });
+
         logger.info("Spark Wrapper started.");
     }
 

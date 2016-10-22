@@ -18,11 +18,12 @@
  */
 package io.alicorn.server.http;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.alicorn.data.jongothings.UsersDbFacade;
 import io.alicorn.data.models.Agent;
 import io.alicorn.data.models.Client;
-import io.alicorn.data.models.Models;
 import io.alicorn.data.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class LoginEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginEndpoint.class);
 
-    private final Models models;
+    private final UsersDbFacade usersDbFacade;
     private Map<String, String> emailToTokenMap = new ConcurrentHashMap<>();
     private Map<String, User> tokenToUserMap = new ConcurrentHashMap<>();
     private Map<Thread, User> threadToUserMap = new ConcurrentHashMap<>();
@@ -107,9 +108,9 @@ public class LoginEndpoint {
     private String getTokenForUser(String email, String key, boolean asAgent) {
         User user;
         if (asAgent) {
-            user = models.getAgent(email);
+            user = usersDbFacade.getAgentByEmail(email);
         }  else {
-            user = models.getClient(email);
+            user = usersDbFacade.getClientByEmail(email);
         }
 
         if (user != null && user.getKey().equals(hash(key))) {
@@ -127,13 +128,9 @@ public class LoginEndpoint {
     }
 
     @Inject
-    public LoginEndpoint(SparkWrapper sparkWrapper, Models models) {
+    public LoginEndpoint(SparkWrapper sparkWrapper, UsersDbFacade usersDbFacade) {
 
-        this.models = models;
-
-        sparkWrapper.exception(Exception.class, (e, req, res) -> {
-            logger.error("Spark Error: " + e.getMessage(), e);
-        });
+        this.usersDbFacade = usersDbFacade;
 
         sparkWrapper.before((req, res) -> {
             try {
@@ -161,6 +158,7 @@ public class LoginEndpoint {
             JsonObject json = JsonObject.readFrom(req.body());
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), false);
         });
+
         sparkWrapper.post("/api/user/client/logout", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             String email = json.get("email").asString();
@@ -175,10 +173,31 @@ public class LoginEndpoint {
                                                          Client.class);
             if (client.getEmail() != null && client.getKey() != null) {
                 client.setKey(hash(client.getKey()));
-                models.setClient(client.getEmail(), client);
-                return new WebserviceResponse().toString();
+                if (usersDbFacade.getClientByEmail(client.getEmail()) == null) {
+                    usersDbFacade.setClient(client);
+                    return new WebserviceResponse().toString();
+                } else {
+                    return new WebserviceResponse().addError("Another client already exists with the given email address.").toString();
+                }
             } else {
                 return new WebserviceResponse().addError("Provided client must have an email and a key (password) field.").toString();
+            }
+        });
+
+        sparkWrapper.get("/api/user/clients", (req, res) -> {
+            if (isCurrentUserAgent()) {
+                JsonArray users = new JsonArray();
+                ObjectMapper objectMapper = new ObjectMapper();
+                usersDbFacade.getAllClients().forEachRemaining((client) -> {
+                    try {
+                        users.add(JsonObject.readFrom(objectMapper.writeValueAsString(client)).remove("key"));
+                    } catch (Exception e) {
+                        logger.warn(e.getMessage(), e);
+                    }
+                });
+                return new WebserviceResponse().set("clients", users).toString();
+            } else {
+                return new WebserviceResponse().addError("Only registered agents may view users on this HMIS.");
             }
         });
 
@@ -187,6 +206,7 @@ public class LoginEndpoint {
             JsonObject json = JsonObject.readFrom(req.body());
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), true);
         });
+
         sparkWrapper.post("/api/user/agent/logout", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             String email = json.get("email").asString();
@@ -204,13 +224,34 @@ public class LoginEndpoint {
                         Agent.class);
                 if (agent.getEmail() != null && agent.getKey() != null) {
                     agent.setKey(hash(agent.getKey()));
-                    models.setAgent(agent.getEmail(), agent);
-                    return new WebserviceResponse().toString();
+                    if (usersDbFacade.getAgentByEmail(agent.getEmail()) == null) {
+                        usersDbFacade.setAgent(agent);
+                        return new WebserviceResponse().toString();
+                    } else {
+                        return new WebserviceResponse().addError("Another agent already exists with the given email address.").toString();
+                    }
                 } else {
                     return new WebserviceResponse().addError("Provided agent must have an email and a key (password) field.").toString();
                 }
             } else {
                 return new WebserviceResponse().addError("Current agent is not authorized to create a new agent.").toString();
+            }
+        });
+
+        sparkWrapper.get("/api/user/agents", (req, res) -> {
+            if (isCurrentUserAgent()) {
+                JsonArray users = new JsonArray();
+                ObjectMapper objectMapper = new ObjectMapper();
+                usersDbFacade.getAllAgents().forEachRemaining((client) -> {
+                    try {
+                        users.add(JsonObject.readFrom(objectMapper.writeValueAsString(client)).remove("key"));
+                    } catch (Exception e) {
+                        logger.warn(e.getMessage(), e);
+                    }
+                });
+                return new WebserviceResponse().set("agents", users).toString();
+            } else {
+                return new WebserviceResponse().addError("Only registered agents may view users on this HMIS.");
             }
         });
     }

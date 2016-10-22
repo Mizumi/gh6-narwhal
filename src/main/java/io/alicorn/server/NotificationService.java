@@ -18,9 +18,7 @@
  */
 package io.alicorn.server;
 
-import io.alicorn.data.models.Agent;
-import io.alicorn.data.models.Client;
-import io.alicorn.data.models.Models;
+import io.alicorn.data.jongothings.UsersDbFacade;
 import io.alicorn.server.sms.TwilioSMSClient;
 
 import javax.inject.Inject;
@@ -36,7 +34,7 @@ import java.util.List;
 public class NotificationService {
 //Private//////////////////////////////////////////////////////////////////////
 
-    private final Models models;
+    private final UsersDbFacade usersDbFacade;
     private final TwilioSMSClient smsClient;
 
 //Protected////////////////////////////////////////////////////////////////////
@@ -44,13 +42,13 @@ public class NotificationService {
 //Public///////////////////////////////////////////////////////////////////////
 
     @Inject
-    public NotificationService(TwilioSMSClient smsClient, Models models) {
+    public NotificationService(TwilioSMSClient smsClient, UsersDbFacade usersDbFacade) {
         this.smsClient = smsClient;
-        this.models = models;
+        this.usersDbFacade = usersDbFacade;
     }
 
     public void sendNotificationToClients(String message, List<String> emails) {
-        models.getAllClients().forEachRemaining((client) -> {
+        usersDbFacade.getAllClients().forEachRemaining((client) -> {
             if (emails.contains(client.getEmail())) {
                 if (client.getPhoneNumber() != null && !client.getPhoneNumber().isEmpty()) {
                     smsClient.sendSMSMessage(client.getPhoneNumber(), message);
@@ -60,7 +58,7 @@ public class NotificationService {
     }
 
     public void sendNotificationToClients(String message) {
-        models.getAllClients().forEachRemaining((client) -> {
+        usersDbFacade.getAllClients().forEachRemaining((client) -> {
             if (client.getPhoneNumber() != null && !client.getPhoneNumber().isEmpty()) {
                 smsClient.sendSMSMessage(client.getPhoneNumber(), message);
             }

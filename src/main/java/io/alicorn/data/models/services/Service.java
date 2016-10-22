@@ -2,6 +2,7 @@ package io.alicorn.data.models.services;
 
 import io.alicorn.data.models.ContactInfo;
 
+import java.util.List;
 import java.util.UUID;
 
 public abstract class Service {
@@ -17,8 +18,9 @@ public abstract class Service {
     private String uuid;
     private ServiceType serviceType;
     private ContactInfo contactInfo;
+    private List<String> availability;
 
-    protected Service(ServiceType serviceType) {
+    Service(ServiceType serviceType) {
         this.serviceType = serviceType;
     }
 
@@ -29,11 +31,23 @@ public abstract class Service {
         return this.uuid;
     }
 
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     public ContactInfo getContactInfo() {
         return this.contactInfo;
     }
 
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
+    }
+
+    public List<String> getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(List<String> availability) {
+        this.availability = availability;
     }
 }
