@@ -2,20 +2,24 @@
 
 import headerTpl from './header.html';
 
-function headerComponent($log) {
+function headerComponent($log, user) {
 	'ngInject';
 
   var directive = {
     restrict: 'E',
     templateUrl: headerTpl,
     controller: ctrl,
-    controllerAs: 'vm',
+    controllerAs: 'ctrl',
     bindToController: true
   };
 
   return directive;
 
-  function ctrl () {}
+  function ctrl () {
+    var vm = this;
+
+    vm.user = user;
+  }
 
 }
 

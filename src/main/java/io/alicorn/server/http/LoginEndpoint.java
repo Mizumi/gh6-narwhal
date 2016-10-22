@@ -134,8 +134,6 @@ public class LoginEndpoint {
 
         this.usersDbFacade = usersDbFacade;
 
-        sparkWrapper.exception(Exception.class, (e, req, res) -> logger.error("Spark Error: " + e.getMessage(), e));
-
         sparkWrapper.before((req, res) -> {
             try {
                 JsonObject json = Json.parse(req.body()).asObject();

@@ -1,6 +1,6 @@
 <div class="client-view">
     <gh6-header></gh6-header>
-    <div class="jumbotron">
+    <div class="jumbotron" ng-if="!client.user.token">
         <div class="container">
             <h1>Welcome, client!</h1>
 
@@ -13,11 +13,28 @@
                     <label>Password</label>
                     <input ng-model="vm.password"></input>
                 </div>
-                <input type="button" ng-click="vm.login()" value="Login"></input>
-                <input type="button" ng-click="vm.register()" value="Register"></input>
+                <input type="button" ng-click="client.login()" value="Login"></input>
+                <input type="button" ng-click="client.register()" value="Register"></input>
             </form>
 
             
+        </div>
+    </div>
+    <div class="jumbotron">
+        <div class="container">
+
+            <div class="client-view-self"  ng-if="client.user.type === 'client'">
+                <h1>Welcome, client!</h1>
+
+                <div>Here are your resources:</div>
+            </div>
+
+            <div class="client-view-self"  ng-if="client.user.type !== 'client'">
+                <h1>Welcome, agent!</h1>
+
+                <div>Here is the client:</div>
+                {{client.loadedClient}}
+            </div>
         </div>
     </div>
 </div>

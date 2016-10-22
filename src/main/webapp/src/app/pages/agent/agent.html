@@ -1,5 +1,6 @@
+<div class="agent-view">
 <gh6-header></gh6-header>
-<div class="jumbotron">
+<div class="jumbotron" ng-if="!agent.user.token">
     <div class="container">
         <h1>Welcome, Agent!</h1>
         <p>This is a simple angular webpack es6 example, compatible with lazy-loading modules.</p>
@@ -13,9 +14,44 @@
                 <label>Password</label>
                 <input ng-model="vm.password"></input>
             </div>
-            <input type="button" ng-click="ctrl.login()" value="Login"></input>
-            <input type="button" ng-click="ctrl.register()" value="Register"></input>
+            <input type="button" ng-click="agent.login()" value="Login"></input>
+            <input type="button" ng-click="agent.register()" value="Register"></input>
         </form>
         
     </div>
+</div>
+<div ng-if="agent.user.token">
+    <div class="container">
+        <p>Your CoCs</p>
+
+        <ul class="list-group">
+            <li ng-repeat="coc in agent.cocs track by $index" class="list-group-item">
+                    <span class="control-panel" role="group">
+
+                        <span class="btn-group col-lg-6">
+
+                            <a title="View Organization" ui-sref="coc({uid: coc.uid })">
+                                {{coc.name}}
+                            </a>
+
+                        </span>
+                        
+                    </span>
+                
+            </li>
+            <li class="col-lg-6 list-group-item">
+                <div class="control-panel input-group" role="group">
+                    <input type="text" ng-model="agent.newCocName" class="form-control">
+
+                    <span class="input-group-btn">    
+                        <button class="btn btn-secondary" type="button">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </span>
+                </div>
+            </li>
+        </ul>
+        
+    </div>
+</div>
 </div>
