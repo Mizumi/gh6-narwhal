@@ -68,6 +68,14 @@ public class SparkWrapper {
             return html.toString();
         });
 
+        Spark.before((req, res) -> {
+            logger.info("Receiving {} request for {}", req.requestMethod(), req.url());
+        });
+
+        Spark.after((req, res) -> {
+            logger.info("Returning {} for {} request for {}", res.body(), req.requestMethod(), req.url());
+        });
+
         logger.info("Spark Wrapper started.");
     }
 
