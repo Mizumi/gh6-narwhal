@@ -1,13 +1,25 @@
 package io.alicorn.data.models;
 
-import io.alicorn.data.models.resources.Resource;
 
-import java.util.List;
+import java.util.Set;
 
 public class Continuum {
+    private enum Specialty {
+        SingleMen, SingleWomen, Veteran, WomenWithChildren, Families, Youth
+    }
+
+    private String name;
     private String address;
     private String phoneNumber;
-    private List<Resource> resources;
+    private Set<Specialty> specialties;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getAddress() {
         return address;
@@ -25,11 +37,19 @@ public class Continuum {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Resource> getResources() {
-        return resources;
+    public Set<Specialty> getSpecialties() {
+        return specialties;
     }
 
-    public void setResources(List<Resource> resources) {
-        this.resources = resources;
+    public void setSpecialties(Set<Specialty> specialties) {
+        this.specialties = specialties;
+    }
+
+    public void addSpecialty(Specialty specialty) {
+        this.specialties.add(specialty);
+    }
+
+    public void removeSpecialty(Specialty specialty) {
+        this.specialties.remove(specialty);
     }
 }

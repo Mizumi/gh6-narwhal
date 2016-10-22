@@ -11,6 +11,8 @@ public class Client extends User {
     private String gender;
     private boolean veteran;
     private String veteranInfo;
+    private String maritalStatus;
+    private int numberOfChildren;
 
     public String getFirstName() {
         return firstName;
