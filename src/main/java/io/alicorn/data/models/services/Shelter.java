@@ -1,8 +1,13 @@
 package io.alicorn.data.models.services;
 
-public class Shelter implements Service {
-    @Override
-    public Type getType() {
-        return Type.Shelter;
+public class Shelter extends Service {
+    private int totalAvailability;
+    private int currentAvailability;
+    private String unitType;
+
+    public Shelter() {
+        super(ServiceType.Shelter);
     }
+
+
 }

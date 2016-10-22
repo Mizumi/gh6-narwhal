@@ -1,8 +1,7 @@
 package io.alicorn.data.models.services;
 
-public class Food implements Service {
-    @Override
-    public Type getType() {
-        return Type.Food;
+public class Food extends Service {
+    public Food() {
+        super(ServiceType.Food);
     }
 }
