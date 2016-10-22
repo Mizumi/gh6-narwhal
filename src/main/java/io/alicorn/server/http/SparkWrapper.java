@@ -52,11 +52,7 @@ public class SparkWrapper {
     public SparkWrapper() {
         Spark.port(9789);
         Spark.externalStaticFileLocation("src/main/webapp/dist");
-        Spark.before((req, res) -> {
-            res.header("Access-Control-Allow-Headers", "Content-Type");
-            res.header("Access-Control-Allow-Methods", "GET,POST");
-            res.header("Access-Control-Allow-Origin", "*");
-        });
+
         Spark.get("/api/endpoints", (req, res) -> {
             res.type("text/html");
             StringBuilder html = new StringBuilder();

@@ -16,7 +16,7 @@ public abstract class Service {
 
     private String uuid;
     private ServiceType serviceType;
-    ContactInfo contactInfo;
+    private ContactInfo contactInfo;
 
     protected Service(ServiceType serviceType) {
         this.serviceType = serviceType;
@@ -30,6 +30,11 @@ public abstract class Service {
         return this.uuid;
     }
 
-//    abstract ContactInfo getContactInfo();
-//    abstract void setContactInfo(ContactInfo contactInfo);
+    public ContactInfo getContactInfo() {
+        return this.contactInfo;
+    }
+
+    public void setContactInfo(ContactInfo contactInfo) {
+        this.contactInfo = contactInfo;
+    }
 }

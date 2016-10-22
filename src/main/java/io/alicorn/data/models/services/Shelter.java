@@ -8,6 +8,4 @@ public class Shelter extends Service {
     public Shelter() {
         super(ServiceType.Shelter);
     }
-
-
 }
