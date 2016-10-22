@@ -157,6 +157,7 @@ public class LoginEndpoint {
             if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
                 JsonObject user = json.get("user").asObject();
                 if (user.get("email") != null && user.get("password") != null) {
+                    user.set("password", hash(user.get("password").asString()));
                     JongoDriver.getCollection("Clients").update("{email:#}",
                                                                 user.get("email").asString()).upsert().with(user.toString());
                     return "Created user!";
