@@ -10,7 +10,7 @@ function routeConfig($stateProvider) {
       url: '/agent/:id',
       templateUrl: agentTpl,
       controller: require('./agent.controller'),
-      controllerAs: 'ctrl'
+      controllerAs: 'agent'
     });
 
 }

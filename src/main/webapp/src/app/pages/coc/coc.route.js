@@ -10,7 +10,7 @@ function routeConfig($stateProvider) {
       url: '/coc/:id',
       templateUrl: cocTpl,
       controller: require('./coc.controller'),
-      controllerAs: 'ctrl',
+      controllerAs: 'coc',
     });
 
 }
