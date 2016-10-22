@@ -161,6 +161,7 @@ public class LoginEndpoint {
             JsonObject json = JsonObject.readFrom(req.body());
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), false);
         });
+
         sparkWrapper.post("/api/user/client/logout", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             String email = json.get("email").asString();
@@ -191,6 +192,7 @@ public class LoginEndpoint {
             JsonObject json = JsonObject.readFrom(req.body());
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), true);
         });
+
         sparkWrapper.post("/api/user/agent/logout", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             String email = json.get("email").asString();
