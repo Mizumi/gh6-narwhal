@@ -22,7 +22,6 @@ public abstract class Service {
         this.serviceType = serviceType;
     }
 
-
     public String getUuid() {
         if (uuid == null || uuid.isEmpty()) {
             uuid = serviceType.toString() + UUID.randomUUID().toString();
