@@ -2,7 +2,7 @@ package io.alicorn.data.models;
 
 public class Agent extends User {
     private String email;
-    private String password;
+    private String key;
 
     public String getEmail() {
         return email;
@@ -12,12 +12,12 @@ public class Agent extends User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getKey() {
+        return key;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     @Override
