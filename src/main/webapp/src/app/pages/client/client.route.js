@@ -11,6 +11,14 @@ function routeConfig($stateProvider) {
       templateUrl: clientTpl,
       controller: require('./client.controller'),
       controllerAs: 'client',
+      resolve: {
+        loadedClient: function($stateParams, $http, user) {
+          if (user.type === 'agent') {
+            return $http.get('/api/user/client/' + $stateParams.id);
+          }
+          return user.data;
+        }
+      }
     });
 
 }

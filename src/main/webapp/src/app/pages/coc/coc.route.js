@@ -11,6 +11,14 @@ function routeConfig($stateProvider) {
       templateUrl: cocTpl,
       controller: require('./coc.controller'),
       controllerAs: 'coc',
+      resolve: {
+        loadedCoc: function($stateParams, $http, user) {
+          return $http.get('/api/coc/' + $stateParams.id)
+          .then(function(res) {
+            return res.data;
+          });
+        }
+      }
     });
 
 }

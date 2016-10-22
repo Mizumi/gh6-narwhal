@@ -1,9 +1,16 @@
 'use strict';
 
-function AgentController($log, $stateParams, $http, user, $scope) {
+function AgentController($log, $state, $stateParams, $http, user, $scope) {
   'ngInject';
 
   var vm = this;
+
+  vm.user = user;
+
+  vm.cocs = [
+    {name: 'coc 1'},
+    {name: 'coc 2'}
+  ];
 
   vm.login = function() {
     var payload = {email: vm.email, key: vm.password};
@@ -27,7 +34,17 @@ function AgentController($log, $stateParams, $http, user, $scope) {
     $http.post('/api/user/agent/login', payload).then(function(res) {
       $log('registered:', res);
     });
-  };1
+  };
+
+  // Redirect home if user is not an agent
+  $scope.$watch('agent.user.type', function(val) {
+    if (!user.token) return;
+    if (val !== 'agent') {
+      $state.go('main');
+    }
+  })
+
+  vm.login();
 
 }
 
