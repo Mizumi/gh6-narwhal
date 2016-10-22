@@ -35,6 +35,8 @@ public class ConfigImpl implements Config {
 
     private String twilioAccountSID = "";
     private String twilioAuthToken = "";
+    private int mongoDatabasePort = 27017;
+    private String mongoDatabaseUrl = "localhost";
     private String mongoDatabaseName = "GH6";
 
     @Inject
@@ -44,6 +46,11 @@ public class ConfigImpl implements Config {
             twilioAccountSID = json.get("twilioAccountSID").asString();
             twilioAuthToken = json.get("twilioAuthToken").asString();
         } catch (IOException e) {
+            twilioAccountSID = System.getenv("gh6.twilio.acc.sid");
+            twilioAuthToken = System.getenv("gh6.twilio.auth.sid");
+            mongoDatabaseUrl = System.getenv("gh6.mongo.url");
+            mongoDatabasePort = Integer.parseInt(System.getenv("gh6.mongo.port"));
+            mongoDatabaseName = System.getenv("gh6.mongo.database");
             logger.error(e.getMessage(), e);
         }
     }
