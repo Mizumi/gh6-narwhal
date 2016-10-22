@@ -56,7 +56,15 @@ public class TwilioSMSClient {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
     }
 
-    public Message sendMessage(String toNumber, String message) {
+    /**
+     * Sends an SMS text message to a phone.
+     *
+     * @param toNumber Phone number to send the SMS message to. Prefix with +1 for NA numbers.
+     * @param message Message to send.
+     *
+     * @return The Twilio {@link Message} response.
+     */
+    public Message sendSMSMessage(String toNumber, String message) {
         logger.info("Sending message {} to {}", message, toNumber);
         return Message
                 .creator(new PhoneNumber(toNumber),
