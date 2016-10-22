@@ -1,11 +1,20 @@
-<div class="header">
+<div class="header shade">
     <div class="header-title">
         <h1 ui-sref="main">Globalhack VI</h1>
     </div>
-    <span ng-if="!ctrl.user.token" >
-        <button ui-sref="client">Client Login</button>
-        <button ui-sref="agent">Agent Login</button>
+    <span class="header-auth">
+        <button ng-if="ctrl.user.token" ng-click="ctrl.user.token = undefined; ctrl.user.type = undefined" ui-sref="agent">Logout</button>
+        
+        <span ng-if="!ctrl.user.token">
+            <button ui-sref="client">Client Login</button>
+            <button ui-sref="agent">Agent Login</button>
+        </span>
+
+        <div style="display: inline-block">
+            {{ctrl.user.token}}
+            </br>
+            {{ctrl.user.type}}
+        </div>
     </span>
-        {{ctrl.user.token}}
     
 </div>

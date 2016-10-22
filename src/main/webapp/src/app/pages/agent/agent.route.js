@@ -10,7 +10,17 @@ function routeConfig($stateProvider) {
       url: '/agent/:id',
       templateUrl: agentTpl,
       controller: require('./agent.controller'),
-      controllerAs: 'agent'
+      controllerAs: 'agent',
+      resolve: {
+        loadedCocs: function($stateParams, $http, user) {
+          return $http.get('/api/cocs', {timeout: 5000})
+          .then(function(res) {
+            return res.data.cocs;
+          }).catch(function(res) {
+            return null;
+          });
+        }
+      }
     });
 
 }
