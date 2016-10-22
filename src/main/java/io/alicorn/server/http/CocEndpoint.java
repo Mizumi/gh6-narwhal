@@ -1,13 +1,18 @@
 package io.alicorn.server.http;
 
 import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.alicorn.data.jongothings.CocDbFacade;
 import io.alicorn.data.models.Continuum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
 public class CocEndpoint {
+    private static final Logger logger = LoggerFactory.getLogger(CocEndpoint.class);
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
     @Inject
     public CocEndpoint(SparkWrapper sparkWrapper, CocDbFacade cocDbFacade, LoginEndpoint loginEndpoint) {
@@ -44,6 +49,19 @@ public class CocEndpoint {
                 return new WebserviceResponse().toString();
             }
             return null;
+        });
+
+        // Get all the continuum
+        sparkWrapper.get("/api/cocs", (req, res) -> {
+            JsonArray cocs = new JsonArray();
+            cocDbFacade.getAllContinuum().forEachRemaining((coc) -> {
+                try {
+                    cocs.add(Json.parse(objectMapper.writeValueAsString(coc)));
+                } catch (Exception ex) {
+                    logger.warn(ex.getMessage(), ex);
+                }
+            });
+            return new WebserviceResponse().set("cocs", cocs).toString();
         });
     }
 }
