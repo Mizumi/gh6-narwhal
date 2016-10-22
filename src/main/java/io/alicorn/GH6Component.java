@@ -18,21 +18,12 @@
  */
 package io.alicorn;
 
-import io.alicorn.server.http.GH6Webservice;
+import dagger.Component;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public final class GH6 {
-
-    @Inject
-    protected GH6Webservice gh6Webservice;
-
-    @Inject
-    public GH6() { }
-
-    public static void main(String[] args) {
-        DaggerGH6Component.builder().build().getGH6();
-    }
+@Component(modules = {GH6Module.class})
+public interface GH6Component {
+    public GH6 getGH6();
 }

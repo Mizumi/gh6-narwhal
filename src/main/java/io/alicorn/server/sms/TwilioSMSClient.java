@@ -16,23 +16,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.alicorn;
+package io.alicorn.server.sms;
 
-import io.alicorn.server.http.GH6Webservice;
+/**
+ * TODO:
+ *
+ * @author Brandon Sanders [brandon@alicorn.io]
+ */
+public class TwilioSMSClient {
+//Private//////////////////////////////////////////////////////////////////////
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+//Protected////////////////////////////////////////////////////////////////////
 
-@Singleton
-public final class GH6 {
+//Public///////////////////////////////////////////////////////////////////////
 
-    @Inject
-    protected GH6Webservice gh6Webservice;
-
-    @Inject
-    public GH6() { }
-
-    public static void main(String[] args) {
-        DaggerGH6Component.builder().build().getGH6();
-    }
+    public static final String ACCOUNT_SID = "ACecd88b29b86fc4357ffe4c9ab9cebb8b";
+    public static final String AUTH_TOKEN = "";
 }

@@ -18,21 +18,8 @@
  */
 package io.alicorn;
 
-import io.alicorn.server.http.GH6Webservice;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-@Singleton
-public final class GH6 {
-
-    @Inject
-    protected GH6Webservice gh6Webservice;
-
-    @Inject
-    public GH6() { }
-
-    public static void main(String[] args) {
-        DaggerGH6Component.builder().build().getGH6();
-    }
+public interface Config {
+    public String getTwilioAccountSID();
+    public String getTwilioAuthToken();
+    public String getMongoDatabaseName();
 }

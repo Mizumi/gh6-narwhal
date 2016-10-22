@@ -18,21 +18,22 @@
  */
 package io.alicorn;
 
-import io.alicorn.server.http.GH6Webservice;
+import dagger.Module;
+import dagger.Provides;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@Singleton
-public final class GH6 {
+/**
+ * Add all dependencies here that are implementations of interfaces or need
+ * pre configuration.
+ *
+ * @author Brandon Sanders [brandon@alicorn.io]
+ */
+@Module
+public class GH6Module {
 
-    @Inject
-    protected GH6Webservice gh6Webservice;
-
-    @Inject
-    public GH6() { }
-
-    public static void main(String[] args) {
-        DaggerGH6Component.builder().build().getGH6();
+    @Provides @Singleton
+    public Config provideConfig() {
+        return new ConfigImpl();
     }
 }

@@ -16,23 +16,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.alicorn;
+package io.alicorn.server.http;
 
-import io.alicorn.server.http.GH6Webservice;
+import io.alicorn.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public final class GH6 {
+public class GH6Webservice {
+
+    private static final Logger logger = LoggerFactory.getLogger(GH6Webservice.class);
 
     @Inject
-    protected GH6Webservice gh6Webservice;
-
-    @Inject
-    public GH6() { }
-
-    public static void main(String[] args) {
-        DaggerGH6Component.builder().build().getGH6();
+    public GH6Webservice(SparkWrapper sparkWrapper) {
+        logger.info("Webservice started.");
     }
 }
