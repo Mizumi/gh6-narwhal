@@ -18,7 +18,6 @@
  */
 package io.alicorn.server.http;
 
-import io.alicorn.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -52,6 +52,7 @@ public class ConfigImpl implements Config {
     public String getTwilioAccountSID() {
         return twilioAccountSID;
     }
+
     @Override
     public String getTwilioAuthToken() {
         return twilioAuthToken;
