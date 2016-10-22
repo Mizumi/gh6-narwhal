@@ -31,6 +31,9 @@ public class GH6Webservice {
     private static final Logger logger = LoggerFactory.getLogger(GH6Webservice.class);
 
     @Inject
+    protected LoginEndpoint loginEndpoint;
+
+    @Inject
     public GH6Webservice(SparkWrapper sparkWrapper) {
         logger.info("Webservice started.");
     }
