@@ -45,7 +45,11 @@ public class ServiceDbFacade {
         return JongoDriver.getCollection(SERVICE_COLLECTION).findOne("{uuid:#}", uuid).as(Service.class);
     }
 
-    public Iterator<Service> getAllServices() {
-        return JongoDriver.getCollection(SERVICE_COLLECTION).find().as(Service.class);
+    public Iterator<Service> getAllInList(String uuids) {
+        return JongoDriver.getCollection(SERVICE_COLLECTION).find("{uuid: {$in: # }", uuids).as(Service.class);
+    }
+
+    public void deleteService(String uuid) {
+        JongoDriver.getCollection(SERVICE_COLLECTION).remove("{uuid:#}", uuid);
     }
 }

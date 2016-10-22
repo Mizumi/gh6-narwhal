@@ -18,15 +18,12 @@
  */
 package io.alicorn.data.jongothings;
 
-import com.mongodb.gridfs.CLI;
-import io.alicorn.data.jongothings.JongoDriver;
 import io.alicorn.data.models.Agent;
 import io.alicorn.data.models.Client;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Utils for scanning all models in the Mongo database.

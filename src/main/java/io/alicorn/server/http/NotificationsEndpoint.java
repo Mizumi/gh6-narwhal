@@ -18,9 +18,9 @@
  */
 package io.alicorn.server.http;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import io.alicorn.data.models.User;
 import io.alicorn.server.NotificationService;
 
 import javax.inject.Inject;
@@ -35,17 +35,11 @@ import java.util.List;
  */
 @Singleton
 public class NotificationsEndpoint {
-//Private//////////////////////////////////////////////////////////////////////
-
-//Protected////////////////////////////////////////////////////////////////////
-
-//Public///////////////////////////////////////////////////////////////////////
-
     @Inject
     public NotificationsEndpoint(LoginEndpoint loginEndpoint, SparkWrapper sparkWrapper, NotificationService notificationService) {
         sparkWrapper.post("/api/user/client/notifyAll", (req, res) -> {
             if (loginEndpoint.isCurrentUserAgent()) {
-                String notification = JsonObject.readFrom(req.body()).get("notification").asString();
+                String notification = Json.parse(req.body()).asObject().get("notification").asString();
                 notificationService.sendNotificationToClients(notification);
                 return new WebserviceResponse().toString();
             } else {
@@ -55,7 +49,7 @@ public class NotificationsEndpoint {
 
         sparkWrapper.post("/api/user/client/notifyList", (req, res) -> {
             if (loginEndpoint.isCurrentUserAgent()) {
-                JsonObject json = JsonObject.readFrom(req.body());
+                JsonObject json = Json.parse(req.body()).asObject();
                 String notification = json.get("notification").asString();
                 List<String> emails = new ArrayList<>();
                 for (JsonValue email : json.get("emails").asArray()) {

@@ -18,10 +18,9 @@
  */
 package io.alicorn.data.jongothings;
 
-import io.alicorn.data.models.Continuum;
+import io.alicorn.data.models.services.externalized.inner.classes.to.make.brandon.happy.Employer;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Iterator;
 
 /**
@@ -29,27 +28,26 @@ import java.util.Iterator;
  *
  * @author Brandon Sanders [brandon@alicorn.io]
  */
-@Singleton
-public class CocDbFacade {
+public class EmployerDbFacade {
 
-    public static final String COC_COLLECTION = "Cocs";
+    public static final String EMPLOYER_COLLECTION = "Employers";
 
     @Inject
-    public CocDbFacade() { }
+    public EmployerDbFacade() { }
 
-    public void setCoc(Continuum continuum) {
-        JongoDriver.getCollection(COC_COLLECTION).update("{uuid:#}", continuum.getUuid()).upsert().with(continuum);
+    public void setEmployer(Employer employer) {
+        JongoDriver.getCollection(EMPLOYER_COLLECTION).update("{uuid:#}", employer.getUuid()).upsert().with(employer);
     }
 
-    public Continuum getContinuum(String uuid) {
-        return JongoDriver.getCollection(COC_COLLECTION).findOne("{uuid:#}", uuid).as(Continuum.class);
+    public Employer getEmployer(String uuid) {
+        return JongoDriver.getCollection(EMPLOYER_COLLECTION).findOne("{uuid:#}", uuid).as(Employer.class);
     }
 
-    public Iterator<Continuum> getAllContinuum() {
-        return JongoDriver.getCollection(COC_COLLECTION).find().as(Continuum.class);
+    public Iterator<Employer> getAllEmployers() {
+        return JongoDriver.getCollection(EMPLOYER_COLLECTION).find().as(Employer.class);
     }
 
-    public void deleteContinuum(String uuid) {
-        JongoDriver.getCollection(COC_COLLECTION).remove("{uuid:#}", uuid);
+    public void deleteEmployer(String uuid) {
+        JongoDriver.getCollection(EMPLOYER_COLLECTION).remove("{uuid:#}", uuid);
     }
 }

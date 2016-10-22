@@ -18,6 +18,7 @@
  */
 package io.alicorn.server.http;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,6 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LoginEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginEndpoint.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private final UsersDbFacade usersDbFacade;
     private Map<String, String> emailToTokenMap = new ConcurrentHashMap<>();
@@ -134,7 +136,7 @@ public class LoginEndpoint {
 
         sparkWrapper.before((req, res) -> {
             try {
-                JsonObject json = JsonObject.readFrom(req.body()).asObject();
+                JsonObject json = Json.parse(req.body()).asObject();
                 if (json.get("token") != null) {
                     if (tokenToUserMap.containsKey(json.get("token").asString())) {
                         threadToUserMap.put(Thread.currentThread(), tokenToUserMap.get(json.get("token").asString()));
@@ -155,12 +157,12 @@ public class LoginEndpoint {
 
         // Clients ////////////////////////////////////////////////////////////
         sparkWrapper.post("/api/user/client/login", (req, res) -> {
-            JsonObject json = JsonObject.readFrom(req.body());
+            JsonObject json = Json.parse(req.body()).asObject();
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), false);
         });
 
         sparkWrapper.post("/api/user/client/logout", (req, res) -> {
-            JsonObject json = JsonObject.readFrom(req.body());
+            JsonObject json = Json.parse(req.body()).asObject();
             String email = json.get("email").asString();
             String token = emailToTokenMap.get(email);
             emailToTokenMap.remove(email);
@@ -169,7 +171,7 @@ public class LoginEndpoint {
         });
 
         sparkWrapper.post("/api/user/clients", (req, res) -> {
-            Client client = new ObjectMapper().readValue(JsonObject.readFrom(req.body()).asObject().get("client").toString(),
+            Client client = objectMapper.readValue(Json.parse(req.body()).asObject().get("client").toString(),
                                                          Client.class);
             if (client.getEmail() != null && client.getKey() != null) {
                 client.setKey(hash(client.getKey()));
@@ -190,7 +192,7 @@ public class LoginEndpoint {
                 ObjectMapper objectMapper = new ObjectMapper();
                 usersDbFacade.getAllClients().forEachRemaining((client) -> {
                     try {
-                        users.add(JsonObject.readFrom(objectMapper.writeValueAsString(client)).remove("key"));
+                        users.add(Json.parse(objectMapper.writeValueAsString(client)).asObject().remove("key"));
                     } catch (Exception e) {
                         logger.warn(e.getMessage(), e);
                     }
@@ -203,12 +205,12 @@ public class LoginEndpoint {
 
         // Agents /////////////////////////////////////////////////////////////
         sparkWrapper.post("/api/user/agent/login", (req, res) -> {
-            JsonObject json = JsonObject.readFrom(req.body());
+            JsonObject json = Json.parse(req.body()).asObject();
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), true);
         });
 
         sparkWrapper.post("/api/user/agent/logout", (req, res) -> {
-            JsonObject json = JsonObject.readFrom(req.body());
+            JsonObject json = Json.parse(req.body()).asObject();
             String email = json.get("email").asString();
             String token = emailToTokenMap.get(email);
             emailToTokenMap.remove(email);
@@ -218,9 +220,9 @@ public class LoginEndpoint {
 
         // TODO: Copy-pasta from above.
         sparkWrapper.post("/api/user/agents", (req, res) -> {
-            if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
-                Agent agent = new ObjectMapper().readValue(
-                        JsonObject.readFrom(req.body()).asObject().get("agent").toString(),
+            if (isCurrentUserAgent()) {
+                Agent agent = objectMapper.readValue(
+                        Json.parse(req.body()).asObject().get("agent").toString(),
                         Agent.class);
                 if (agent.getEmail() != null && agent.getKey() != null) {
                     agent.setKey(hash(agent.getKey()));
@@ -244,7 +246,7 @@ public class LoginEndpoint {
                 ObjectMapper objectMapper = new ObjectMapper();
                 usersDbFacade.getAllAgents().forEachRemaining((client) -> {
                     try {
-                        users.add(JsonObject.readFrom(objectMapper.writeValueAsString(client)).remove("key"));
+                        users.add(Json.parse(objectMapper.writeValueAsString(client)).asObject().remove("key"));
                     } catch (Exception e) {
                         logger.warn(e.getMessage(), e);
                     }

@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Continuum {
-    private enum Specialty {
+    public enum Specialty {
         SingleMen, SingleWomen, Veteran, WomenWithChildren, Families, Youth
     }
 
