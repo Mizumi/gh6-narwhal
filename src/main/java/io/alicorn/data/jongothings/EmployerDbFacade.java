@@ -18,15 +18,36 @@
  */
 package io.alicorn.data.jongothings;
 
+import io.alicorn.data.models.services.externalized.inner.classes.to.make.brandon.happy.Employer;
+
+import javax.inject.Inject;
+import java.util.Iterator;
+
 /**
  * TODO:
  *
  * @author Brandon Sanders [brandon@alicorn.io]
  */
 public class EmployerDbFacade {
-//Private//////////////////////////////////////////////////////////////////////
 
-//Protected////////////////////////////////////////////////////////////////////
+    public static final String EMPLOYER_COLLECTION = "Employers";
 
-//Public///////////////////////////////////////////////////////////////////////
+    @Inject
+    public EmployerDbFacade() { }
+
+    public void setEmployer(Employer employer) {
+        JongoDriver.getCollection(EMPLOYER_COLLECTION).update("{uuid:#}", employer.getUuid()).upsert().with(employer);
+    }
+
+    public Employer getEmployer(String uuid) {
+        return JongoDriver.getCollection(EMPLOYER_COLLECTION).findOne("{uuid:#}", uuid).as(Employer.class);
+    }
+
+    public Iterator<Employer> getAllEmployers() {
+        return JongoDriver.getCollection(EMPLOYER_COLLECTION).find().as(Employer.class);
+    }
+
+    public void deleteEmployer(String uuid) {
+        JongoDriver.getCollection(EMPLOYER_COLLECTION).remove("{uuid:#}", uuid);
+    }
 }

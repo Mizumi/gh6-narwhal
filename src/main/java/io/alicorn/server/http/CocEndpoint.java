@@ -18,7 +18,7 @@ public class CocEndpoint {
     public CocEndpoint(SparkWrapper sparkWrapper, CocDbFacade cocDbFacade, LoginEndpoint loginEndpoint) {
 
         // Create / Update
-        sparkWrapper.post("/api/coc", (req, res) -> {
+        sparkWrapper.post("/api/cocs", (req, res) -> {
             if (loginEndpoint.isCurrentUserAgent()) {
                 Continuum continuum = objectMapper.readValue(
                         Json.parse(req.body()).asObject().get("coc").toString(),
@@ -32,7 +32,7 @@ public class CocEndpoint {
         });
 
         // Retrieve
-        sparkWrapper.get("/api/coc/:uuid", (req, res) -> {
+        sparkWrapper.get("/api/cocs/:uuid", (req, res) -> {
             Continuum continuum = cocDbFacade.getContinuum(req.params(":uuid"));
             if (continuum != null) {
                 return new WebserviceResponse().set("coc", Json.parse(objectMapper.writeValueAsString(continuum)));
@@ -47,8 +47,9 @@ public class CocEndpoint {
             if (loginEndpoint.isCurrentUserAgent()) {
                 cocDbFacade.deleteContinuum(uuidToDelete);
                 return new WebserviceResponse().toString();
+            } else {
+                return new WebserviceResponse().addError("You can't do that, fam.");
             }
-            return null;
         });
 
         // Get all the continuum
