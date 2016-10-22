@@ -144,7 +144,9 @@ public class LoginEndpoint {
                     }
                 }
             } catch (Exception e) {
-                logger.warn(e.getMessage(), e);
+                if (!e.getMessage().contains("Unexpected end of input at 1:-1")) {
+                    logger.warn(e.getMessage(), e);
+                }
             }
         });
 

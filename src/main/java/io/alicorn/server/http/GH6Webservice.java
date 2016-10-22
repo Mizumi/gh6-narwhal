@@ -34,7 +34,7 @@ public class GH6Webservice {
     protected LoginEndpoint loginEndpoint;
 
     @Inject
-    private NotificationsEndpoint notificationsEndpoint;
+    protected NotificationsEndpoint notificationsEndpoint;
 
     @Inject
     public GH6Webservice(SparkWrapper sparkWrapper) {
