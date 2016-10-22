@@ -1,6 +1,6 @@
 /*
  * Project: gh6
- * Since: Oct 21, 2016
+ * Since: Oct 22, 2016
  *
  * Copyright (c) Brandon Sanders [brandon@alicorn.io]
  *
@@ -16,25 +16,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.alicorn.server.http;
+package io.alicorn.data.models;
 
-import io.alicorn.server.sms.TwilioSMSClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-@Singleton
-public class GH6Webservice {
-
-    private static final Logger logger = LoggerFactory.getLogger(GH6Webservice.class);
-
-    @Inject
-    protected LoginEndpoint loginEndpoint;
-
-    @Inject
-    public GH6Webservice(SparkWrapper sparkWrapper) {
-        logger.info("Webservice started.");
+/**
+ * TODO:
+ *
+ * @author Brandon Sanders [brandon@alicorn.io]
+ */
+public abstract class User {
+    public static enum Kind {
+        CLIENT, AGENT
     }
+
+    private String email;
+    private String key;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public abstract Kind getKind();
 }

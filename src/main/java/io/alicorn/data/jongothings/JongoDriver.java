@@ -12,19 +12,19 @@ public class JongoDriver {
         jongo = new Jongo(new MongoClient().getDB("GH6"));
     }
 
-    public MongoCollection getCollection(String collectionName) {
+    public static MongoCollection getCollection(String collectionName) {
         return jongo.getCollection(collectionName);
     }
 
-    public Query createQuery(String query, Object... params) {
+    public static Query createQuery(String query, Object... params) {
         return jongo.createQuery(query, params);
     }
 
-    public Command runCommand(String query) {
+    public static Command runCommand(String query) {
         return jongo.runCommand(query);
     }
 
-    public Command runCommand(String query, Object... params) {
+    public static Command runCommand(String query, Object... params) {
         return jongo.runCommand(query, params);
     }
 }

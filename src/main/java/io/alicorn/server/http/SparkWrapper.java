@@ -20,6 +20,7 @@ package io.alicorn.server.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spark.Filter;
 import spark.Route;
 import spark.Spark;
 
@@ -45,6 +46,14 @@ public class SparkWrapper {
     public SparkWrapper() {
         Spark.port(9789);
         logger.info("Spark Wrapper started.");
+    }
+
+    public void before(Filter filter) {
+        Spark.before(filter);
+    }
+
+    public void after(Filter filter) {
+        Spark.after(filter);
     }
 
     public void post(String path, Route route) {
