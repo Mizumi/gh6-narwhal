@@ -152,7 +152,7 @@ public class LoginEndpoint {
             return getTokenForUser(json.get("email").asString(), json.get("key").asString(), false);
         });
 
-        sparkWrapper.post("/api/users", (req, res) -> {
+        sparkWrapper.post("/api/user/client/create", (req, res) -> {
             JsonObject json = JsonObject.readFrom(req.body());
             if (hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT)) {
                 JsonObject user = json.get("user").asObject();
