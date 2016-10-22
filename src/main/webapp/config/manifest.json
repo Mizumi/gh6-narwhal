@@ -1,1 +1,1 @@
-{"assets":{"polyfill.map":"polyfill.b8a8355fde81066aff61.js.map","app.map":"assets/styles/css/app.31fd5c1340ddc1f2e314.css.map","vendor.map":"vendor.10a6732d92329928fc32.js.map","common.map":"common.934ea0f68b6f1f2f2676.js.map"},"publicPath":"/"}
+{"assets":{"app.map":"app.js.map","polyfill.map":"polyfill.js.map","vendor.map":"vendor.js.map","common.map":"common.js.map"},"publicPath":"/"}

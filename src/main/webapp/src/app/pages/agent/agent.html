@@ -3,6 +3,19 @@
     <div class="container">
         <h1>Welcome, Agent!</h1>
         <p>This is a simple angular webpack es6 example, compatible with lazy-loading modules.</p>
+
+        <form class="gh6-form">
+            <div>
+                <label>E-mail</label>
+                <input ng-model="vm.email"></input>
+            </div>
+            <div>
+                <label>Password</label>
+                <input ng-model="vm.password"></input>
+            </div>
+            <input type="button" ng-click="ctrl.login()" value="Login"></input>
+            <input type="button" ng-click="ctrl.register()" value="Register"></input>
+        </form>
         
     </div>
 </div>

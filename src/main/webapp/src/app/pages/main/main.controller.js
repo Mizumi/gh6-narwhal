@@ -2,8 +2,10 @@
 
 function MainController($log) {
   'ngInject';
-
-  $log.debug('Hello from main controller!');
+  
+  this.logger = function() {
+    $log.log('heyyy');
+  };
 
 }
 

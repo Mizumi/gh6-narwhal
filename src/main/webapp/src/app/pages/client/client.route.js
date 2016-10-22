@@ -9,8 +9,8 @@ function routeConfig($stateProvider) {
     .state('client', {
       url: '/client/:id',
       templateUrl: clientTpl,
-      controller: require('./client.controller')
-      //controllerAs: 'main',
+      controller: require('./client.controller'),
+      controllerAs: 'ctrl',
     });
 
 }

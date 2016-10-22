@@ -1,6 +1,9 @@
 'use strict';
 
 import mainTpl from './main.html';
+import mainCtrl from './main.controller.js';
+
+console.log(mainCtrl);
 
 function routeConfig($stateProvider) {
   'ngInject';
@@ -9,8 +12,8 @@ function routeConfig($stateProvider) {
     .state('main', {
       url: '/',
       templateUrl: mainTpl,
-      controller: require('./main.controller')
-      //controllerAs: 'main',
+      controller: mainCtrl,
+      controllerAs: 'ctrl'
     });
 
 }
