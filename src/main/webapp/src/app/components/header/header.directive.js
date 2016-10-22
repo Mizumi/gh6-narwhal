@@ -2,7 +2,7 @@
 
 import headerTpl from './header.html';
 
-function headerComponent($log) {
+function headerComponent($log, $state) {
 	'ngInject';
 
   var directive = {
@@ -15,7 +15,16 @@ function headerComponent($log) {
 
   return directive;
 
-  function ctrl () {}
+  function ctrl () {
+
+    var vm = this;
+
+    //When the user clicks the logo, we are going home.
+    vm.logoClick = function(){
+      $state.go('main');
+    }
+
+  }
 
 }
 

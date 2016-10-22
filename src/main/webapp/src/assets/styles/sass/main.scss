@@ -1,0 +1,51 @@
+/*
+ * Project: gh6
+ * Since: Oct 21, 2016
+ *
+ * Copyright (c) Brandon Sanders [brandon@alicorn.io], Joshua Gagen [joshuagagen@outlook.com],
+ *               Edwin Munguia [daiokaio@gmail.com] and Justin Stone
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.mainContainer {
+
+  img {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    text-align: center;
+    color: #fff;
+    z-index: 100;
+    background-attachment: fixed !important;
+    background-position: center !important;
+    -webkit-background-size: cover !important;
+    -moz-background-size: cover !important;
+    background-size: cover !important;
+    -o-background-size: cover !important;
+    background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55));
+  }
+
+
+  .darkMask {
+    z-index: 110;
+    width: 100%;
+    height: 100%;  //TODO: COME BACK TO THIS
+    position: absolute;
+    left: 0;
+    top: 50px;
+    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55));
+
+  }
+
+}
