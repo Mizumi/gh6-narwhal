@@ -46,6 +46,33 @@
     top: 50px;
     background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55));
 
+    //For Text:
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-weight: 700;
+    font-size: 40pt;
+    color: #e5e9eb;
+
+    h1 {
+      font-weight: 900;
+      font-size: 65pt;
+    }
+
+    .navigationButtons {
+      //Bootstrap overrides will have to go here.
+      .btn {
+        font-size: 45px;
+        height: 150px;
+        //border: 5px solid #e5e9eb;
+      }
+
+      span {
+        padding-right: 5px;
+        font-size: 45px;
+      }
+    }
+
   }
 
 }
