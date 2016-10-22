@@ -18,16 +18,19 @@
  */
 package io.alicorn.data.models;
 
+import java.util.UUID;
+
 /**
  * TODO:
  *
  * @author Brandon Sanders [brandon@alicorn.io]
  */
 public abstract class User {
-    public static enum Kind {
+    public enum Kind {
         CLIENT, AGENT
     }
 
+    private String uuid;
     private String email;
     private String key;
 
@@ -48,4 +51,15 @@ public abstract class User {
     }
 
     public abstract Kind getKind();
+
+    public String getUuid() {
+        if (uuid == null || uuid.isEmpty()) {
+            uuid = getKind().toString() + UUID.randomUUID().toString();
+        }
+        return this.uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 }
