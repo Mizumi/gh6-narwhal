@@ -220,4 +220,8 @@ public class LoginEndpoint {
     public User getCurrentUser() {
         return threadToUserMap.get(Thread.currentThread());
     }
+
+    public boolean isCurrentUserAgent() {
+        return hasCurrentUser() && getCurrentUser().getKind().equals(User.Kind.AGENT);
+    }
 }

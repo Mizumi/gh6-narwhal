@@ -19,11 +19,13 @@
 package io.alicorn.server;
 
 import io.alicorn.data.models.Agent;
+import io.alicorn.data.models.Client;
 import io.alicorn.data.models.Models;
 import io.alicorn.server.sms.TwilioSMSClient;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 /**
  * TODO:
@@ -45,6 +47,16 @@ public class NotificationService {
     public NotificationService(TwilioSMSClient smsClient, Models models) {
         this.smsClient = smsClient;
         this.models = models;
+    }
+
+    public void sendNotificationToClients(String message, List<String> emails) {
+        models.getAllClients().forEachRemaining((client) -> {
+            if (emails.contains(client.getEmail())) {
+                if (client.getPhoneNumber() != null && !client.getPhoneNumber().isEmpty()) {
+                    smsClient.sendSMSMessage(client.getPhoneNumber(), message);
+                }
+            }
+        });
     }
 
     public void sendNotificationToClients(String message) {
