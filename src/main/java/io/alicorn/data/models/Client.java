@@ -1,24 +1,18 @@
 package io.alicorn.data.models;
 
 public class Client {
-    private String uuid;
     private String firstName;
     private String middleName;
     private String lastName;
+    private String phoneNumber;
+    private String emailAddress;
     private String ssn;
     private String dob;
     private String ethnicity;
     private String gender;
     private boolean veteran;
     private String veteranInfo;
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+    private String password;
 
     public String getFirstName() {
         return firstName;
@@ -42,6 +36,22 @@ public class Client {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
     public String getSsn() {
@@ -90,5 +100,14 @@ public class Client {
 
     public void setVeteranInfo(String veteranInfo) {
         this.veteranInfo = veteranInfo;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
