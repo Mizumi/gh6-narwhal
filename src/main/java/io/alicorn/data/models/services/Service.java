@@ -5,7 +5,7 @@ import io.alicorn.data.models.ContactInfo;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class Service {
+public class Service {
     enum ServiceType {
         Shelter,
         Food,
@@ -21,6 +21,16 @@ public abstract class Service {
     private List<String> availability;
 
     Service(ServiceType serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    public Service() { }
+
+    public ServiceType getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(ServiceType serviceType) {
         this.serviceType = serviceType;
     }
 
