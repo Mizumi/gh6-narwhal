@@ -37,11 +37,14 @@ module.exports = function(_path) {
       hot: true,
       inline: true,
       proxy: {
-        '/api': {
-          target: '192.168.1.93:9789',
-          secure: false
-        }
-      },
+        "/api/*": 'http://192.168.1.93:9789'
+      }
+      // proxy: {
+      //   '/api': {
+      //     target: '192.168.1.93:9789',
+      //     secure: false
+      //   }
+      // },
     },
 
     // resolves modules

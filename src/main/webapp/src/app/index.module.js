@@ -34,8 +34,7 @@ const App = angular.module(
 
   ]
 )
-.value('userToken', '')
-.value('userType', '');
+.value('user', {})
 
 App
   .config(config)
