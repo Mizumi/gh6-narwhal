@@ -1,22 +1,22 @@
 'use strict';
 
-function AgentController($log, $stateParams, $http, api) {
+function AgentController($log, $stateParams, $http) {
   'ngInject';
 
   var vm = this;
-  console.log('ctrl');
 
   vm.login = function() {
-    var payload = {email: vm.email, password: vm.password};
+    var payload = {email: vm.email, key: vm.password};
+    payload = {email: 'brandon@alicorn.io', key: 'icy'};
     console.log(payload);
     
-    $http.post(api + '/user/agent/login', payload).then(function(res) {
+    $http.post('/api/user/agent/login', payload).then(function(res) {
       $log('logged in:', res);
     });
   };
 
   vm.register = function() {
-    var payload = {email: vm.email, password: vm.password};
+    var payload = {email: vm.email, key: vm.password};
     console.log(payload);
     $http.post('/api/user/agent/login', payload).then(function(res) {
       $log('registered:', res);

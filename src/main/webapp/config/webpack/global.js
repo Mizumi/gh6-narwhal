@@ -31,6 +31,19 @@ module.exports = function(_path) {
       publicPath: '/'
     },
 
+    devServer: {
+      contentBase: './dist',
+      info: true,
+      hot: true,
+      inline: true,
+      proxy: {
+        '/api': {
+          target: '192.168.1.93:9789',
+          secure: false
+        }
+      },
+    },
+
     // resolves modules
     resolve: {
       extensions: ['', '.js'],

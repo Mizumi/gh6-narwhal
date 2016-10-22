@@ -33,7 +33,9 @@ const App = angular.module(
     require("./pages/coc/coc.module").name
 
   ]
-);
+)
+.value('userToken', '')
+.value('userType', '');
 
 App
   .config(config)
