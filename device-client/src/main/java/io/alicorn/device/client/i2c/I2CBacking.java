@@ -1,4 +1,4 @@
-package io.alicorn.device.client;
+package io.alicorn.device.client.i2c;
 
 /**
  * Represents a generic backing for the GrovePi's I2C lines.

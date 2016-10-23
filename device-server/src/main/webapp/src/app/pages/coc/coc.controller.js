@@ -8,8 +8,9 @@ function CocController($log, $stateParams, $http, loadedCoc, user, $scope) {
   vm.loadedCoc = loadedCoc;
   console.log(loadedCoc);
   vm.selectedClient = null;
-  vm.showClientAdder = true;
+  vm.showClientAdder = null;
   vm.ssnArea = '';
+  vm.active = 'overview';
   
   vm.logger = function(a) {
     console.log(a);
