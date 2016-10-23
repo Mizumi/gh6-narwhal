@@ -7,7 +7,7 @@ function routeConfig($stateProvider) {
 
     $stateProvider
         .state('prevention', {
-            url: '/service/:uuid',
+            url: '/prevention',
             templateUrl: preventionTpl,
             controller: require('./prevention.controller'),
             controllerAs: 'prevention'

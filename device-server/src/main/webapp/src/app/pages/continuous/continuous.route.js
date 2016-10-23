@@ -7,7 +7,7 @@ function routeConfig($stateProvider) {
 
     $stateProvider
         .state('continuous', {
-            url: '/service/:uuid',
+            url: '/continuous',
             templateUrl: continuousTpl,
             controller: require('./continuous.controller'),
             controllerAs: 'continuous'

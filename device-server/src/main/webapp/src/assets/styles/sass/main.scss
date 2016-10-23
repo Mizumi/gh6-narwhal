@@ -63,14 +63,59 @@
       font-weight: 100;
       letter-spacing: 1px;
       font-size: 12px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .low-impact {
+      font-weight: 100;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .text-shade {
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .slide-up {
+      position: relative;
+      animation-duration: 0.5s;
+      animation-name: slideUp;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        top: 1000px;
+      }
+
+      to {
+        top: 0;
+      }
     }
 
     .navigationButtons {
-      //Bootstrap overrides will have to go here.
+
+      i {
+        margin-top: 20px;
+        font-size: 40px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      }
+
       .btn {
-        font-size: 45px;
-        height: 150px;
-        //border: 5px solid #e5e9eb;
+        top: 1000px;
+        width: 400px;
+        margin-top: 10px;
+      }
+
+      //Bootstrap overrides will have to go here.
+      .btn>h2 {
+        background-color: #565656;
+        color: transparent;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -moz-background-clip: text;
+        text-shadow: 0 1px 0.8px rgba(255,255,255,0.9);
+        font-size: 60px;
       }
 
       span {
