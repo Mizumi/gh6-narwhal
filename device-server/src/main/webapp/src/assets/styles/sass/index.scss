@@ -67,10 +67,9 @@ ul {
     top: 1em;
     button {
       background-color: rgb(240, 240, 240);
-
-      border: 0;
+      border: 1px solid rgba(0,0,0,0.2);
       font-size: 1.2em;
       font-weight: 100;
-      padding: 0.5em;
+      padding: 0.1em 0.3em;
     }
   }

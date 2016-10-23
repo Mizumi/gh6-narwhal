@@ -37,7 +37,7 @@ const App = angular.module(
 
   ]
 )
-.value('user', {type: 'agent', token:'good'})
+.value('user', {})
 
 App
   .config(config)

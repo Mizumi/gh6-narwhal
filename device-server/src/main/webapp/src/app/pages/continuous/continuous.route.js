@@ -10,7 +10,7 @@ function routeConfig($stateProvider) {
             url: '/continuous',
             templateUrl: continuousTpl,
             controller: require('./continuous.controller'),
-            controllerAs: 'continuous'
+            controllerAs: 'emergency'
             //resolve: {
             //    loadedCoc: function($stateParams, $http, user) {
             //        return $http.get('/api/cocs/' + $stateParams.uuid, {timeout: 5000})

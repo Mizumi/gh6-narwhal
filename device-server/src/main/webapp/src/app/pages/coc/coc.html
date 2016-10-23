@@ -38,6 +38,10 @@
 
         <div class="row top-buffer outline" ng-if="coc.user.type === 'agent' && coc.active === 'client'">
             <ul class="col-sm-3 list-group top-buffer">
+                <li class="form-group">
+                        <label for="children">Find Client</label>
+                        <input type="text" ng-model="coc.children" class="form-control" id="children" placeholder="Client name">
+                </li>
                 <li class="list-group-item" ng-repeat="client in coc.clientList" ng-click="coc.selectedClient = client; coc.showClientAdder = false">{{client}}</li>
                 <li class="list-group-item" ng-if="!coc.clientList || coc.clientList.length === 0">No clients linked</li>
                 <li class="list-group-item" ng-click="coc.showClientAdder = true; coc.selectedClient = null">Add client</li>
@@ -125,6 +129,10 @@
                             </label>
                         </div>
                     </div>
+
+                    <label class="btn btn-primary top-buffer bottom-buffer" ng-click="agent.save()">
+                        Add Client
+                    </label>
 
                 </div>
                 <div ng-if="coc.selectedClient && !coc.showClientAdder">Modify clients in this form</div>

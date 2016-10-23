@@ -10,7 +10,7 @@ function routeConfig($stateProvider) {
             url: '/prevention',
             templateUrl: preventionTpl,
             controller: require('./prevention.controller'),
-            controllerAs: 'prevention'
+            controllerAs: 'emergency'
             //resolve: {
             //    loadedCoc: function($stateParams, $http, user) {
             //        return $http.get('/api/cocs/' + $stateParams.uuid, {timeout: 5000})
