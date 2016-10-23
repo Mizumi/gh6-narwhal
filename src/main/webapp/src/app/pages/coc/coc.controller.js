@@ -6,6 +6,7 @@ function CocController($log, $stateParams, $http, loadedCoc, user, $scope) {
   var vm = this;
   vm.user = user;
   vm.loadedCoc = loadedCoc;
+  console.log(loadedCoc);
   vm.selectedClient = null;
   vm.showClientAdder = true;
   vm.ssnArea = '';
@@ -26,6 +27,22 @@ function CocController($log, $stateParams, $http, loadedCoc, user, $scope) {
       $('#SSNSerial').focus();
     }
   });
+  $scope.$watch('coc.maritalStatus', function(val) {
+    if (val === 'single') {
+      $('.marital-status-radio[data-single]').addClass('active');
+      $('.marital-status-radio[data-married]').removeClass('active');
+
+      $('.marital-status-radio[data-single]>input').attr('checked', '');
+      $('.marital-status-radio[data-married]>input').attr('checked', null);
+    } else {
+      $('.marital-status-radio[data-single]').removeClass('active');
+      $('.marital-status-radio[data-married]').addClass('active');
+
+      $('.marital-status-radio[data-married]>input').attr('checked', '');
+      $('.marital-status-radio[data-single]>input').attr('checked', null);
+    }
+  });
+  vm.maritalStatus = 'single';
 }
 
 export default CocController;

@@ -70,7 +70,6 @@
                     <input type="text" ng-model="coc.gender" class="form-control" id="gender" placeholder="Gender">
                 </div>
 
-
                 <div class="form-group">
                     <label for="gender">Veteran</label>
                     <div class="input-group">
@@ -84,6 +83,23 @@
                 <div class="form-group">
                     <label for="vetranStatus">Veteran Status</label>
                     <input type="text" ng-model="coc.vetranStatus" class="form-control" id="vetranStatus" placeholder="Veteran Status">
+                </div>
+
+                <div class="form-group">
+                    <label for="children">Children</label>
+                    <input type="text" ng-model="coc.children" class="form-control" id="children" placeholder="Number of Children">
+                </div>
+
+                <div class="form-group">
+                    <label for="vetranStatus">Marital Status</label>
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary marital-status-radio active" data-single>
+                            <input type="radio" name="options" autocomplete="off" ng-click="coc.maritalStatus = 'single'" checked> Single
+                        </label>
+                        <label class="btn btn-primary marital-status-radio" data-married>
+                            <input type="radio" name="options" autocomplete="off" ng-click="coc.maritalStatus = 'married'"> Married
+                        </label>
+                    </div>
                 </div>
 
             </div>
