@@ -17,4 +17,5 @@ limitations under the License.
 
 ===============================================================================
 
-The Alicorn Logo is Copyright (c) 2015 - 2016 Brandon Sanders, All Rights Reserved
+The Alicorn Logo is Copyright (c) 2015 - 2016 Brandon Sanders, All Rights Reserved.
+The Alicorn Logo may not be used, in any form, without prior written permission from Brandon Sanders.
