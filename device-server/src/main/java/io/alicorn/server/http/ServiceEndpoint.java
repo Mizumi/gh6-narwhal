@@ -3,6 +3,7 @@ package io.alicorn.server.http;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.alicorn.data.jongothings.CocDbFacade;
 import io.alicorn.data.jongothings.ServiceDbFacade;
 import io.alicorn.data.models.services.Service;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ public class ServiceEndpoint {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Inject
-    public ServiceEndpoint(SparkWrapper spark, ServiceDbFacade serviceDbFacade, LoginEndpoint loginEndpoint) {
+    public ServiceEndpoint(SparkWrapper spark, ServiceDbFacade serviceDbFacade, LoginEndpoint loginEndpoint, CocDbFacade cocDbFacade) {
 
         // Create / Update
         spark.post("/api/services", (req, res) -> {
@@ -70,11 +71,31 @@ public class ServiceEndpoint {
                 try {
                     services.add(Json.parse(objectMapper.writeValueAsString(service)));
                 } catch (Exception ex) {
-                    logger.warn(ex.getMessage());
+                    logger.warn(ex.getMessage(), ex);
                 }
             }));
             return new WebserviceResponse().set("services", services).toString();
         });
 
+//        spark.post("/api/service/getCocsForServices", (req, res) -> {
+//            JsonArray cocs = new JsonArray();
+//            Service.ServiceType type = Service.ServiceType.valueOf(Json.parse(req.body()).asObject().get("serviceType").asString());
+//
+//            cocDbFacade.getAllContinuum().forEachRemaining((continuum) -> {
+//                for (int i = 0; i < continuum.getServices().size(); i++) {
+//                    Service service = continuum.getServices().get(i);
+//                    if (service.getServiceType().equals(type)) {
+//                        try {
+//                            cocs.add(Json.parse(objectMapper.writeValueAsString(continuum)));
+//                            break;
+//                        } catch (Exception ex) {
+//                            logger.warn(ex.getMessage(), ex);
+//                        }
+//                    }
+//                }
+//            });
+//
+//            return new WebserviceResponse().set("cocs", cocs).toString();
+//        });
     }
 }

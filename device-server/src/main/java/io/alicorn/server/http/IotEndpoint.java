@@ -18,8 +18,14 @@
  */
 package io.alicorn.server.http;
 
+import io.alicorn.data.jongothings.ServiceDbFacade;
+import io.alicorn.data.models.services.Service;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * TODO:
@@ -31,32 +37,38 @@ public class IotEndpoint {
 
     // Split on ::;, add six spaces to end.
     private final String[] messages = new String[] {
-        "8 Beds Available // Corner of Convention Plaza and Tucker Blvd::St.Pat. Center      ",
-        "Dinner Time @ 6PM // Across from the Arch::Imaginary Place      ",
-        "Womens' Shelter // 3200 St. Vincent Ave ::Almost Home      "
+        "8 Beds Available // Corner of Convention Plaza and Tucker Blvd      ::St.Pat. Center",
+        "Dinner Time @ 6PM // Across from the Arch      ::Imaginary Place",
+        "Womens' Shelter // 3200 St. Vincent Ave      ::Almost Home"
     };
 
     private final int messagesMask = messages.length;
 
+    private Random random = new Random();
+    private long timer = System.currentTimeMillis();
+    private long cursor = 0;
+    private String message = messages[0];
+
     @Inject
-    public IotEndpoint(SparkWrapper sparkWrapper) {
-
-        class LongWrapper {
-            long l = 0;
-        }
-
-        LongWrapper timer = new LongWrapper();
-        LongWrapper cursor = new LongWrapper();
-        timer.l = System.currentTimeMillis();
-        cursor.l = 0;
+    public IotEndpoint(SparkWrapper sparkWrapper, ServiceDbFacade serviceDbFacade) {
 
         sparkWrapper.get("/api/iot/narwhalText", (req, res) -> {
-            if (System.currentTimeMillis() > timer.l + 30000) {
-                timer.l = System.currentTimeMillis();
-                cursor.l += 1;
+            if (System.currentTimeMillis() > timer + 30000) {
+                timer = System.currentTimeMillis();
+
+                if (cursor % 2 == 0) {
+                    List<Service> list = new ArrayList<>();
+                    serviceDbFacade.getAll().forEachRemaining(list::add);
+                    Service service = list.get(random.nextInt(list.size()));
+                    message = service.getServiceType().name() + " // " + service.getContactInfo().getAddress() + "     ::" + service.getContactInfo().getName();
+                } else {
+                    message = messages[(int) (cursor % messagesMask)];
+                }
+
+                cursor += 1;
             }
 
-            return messages[(int) (cursor.l % messagesMask)];
+            return message;
         });
     }
 }
