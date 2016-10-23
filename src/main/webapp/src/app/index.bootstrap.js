@@ -8,6 +8,9 @@ import "./index.module";
 
 import "../assets/styles/sass/index.scss";
 import "../assets/styles/sass/coc.scss";
+import "../assets/styles/sass/client.scss";
+import "../assets/styles/sass/main.scss";
+import "../assets/styles/sass/header.scss";
 
 angular.element(document).ready(function () {
   angular.bootstrap(document, ['app'], {
