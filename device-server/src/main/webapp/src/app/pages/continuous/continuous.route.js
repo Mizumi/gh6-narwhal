@@ -1,16 +1,16 @@
 'use strict';
 
-import preventionTpl from './prevention.html';
+import continuousTpl from './continuous.html';
 
 function routeConfig($stateProvider) {
     'ngInject';
 
     $stateProvider
-        .state('prevention', {
+        .state('continuous', {
             url: '/service/:uuid',
-            templateUrl: preventionTpl,
-            controller: require('./prevention.controller'),
-            controllerAs: 'prevention'
+            templateUrl: continuousTpl,
+            controller: require('./continuous.controller'),
+            controllerAs: 'continuous'
             //resolve: {
             //    loadedCoc: function($stateParams, $http, user) {
             //        return $http.get('/api/cocs/' + $stateParams.uuid, {timeout: 5000})

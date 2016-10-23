@@ -1,6 +1,6 @@
 'use strict';
 
-function PreventionController($log, $stateParams, $http, user, $scope) {
+function ContinuousController($log, $stateParams, $http, user, $scope) {
     'ngInject';
 
     var vm = this;
@@ -39,4 +39,4 @@ function PreventionController($log, $stateParams, $http, user, $scope) {
     //Functions here
 }
 
-export default PreventionController;
+export default ContinuousController;

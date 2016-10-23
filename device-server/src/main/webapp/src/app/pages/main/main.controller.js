@@ -8,7 +8,7 @@ function MainController($log, $state) {
   };
 
   this.mainCategoryLink = function(type){
-    console.log("we are here");
+    console.log("we are here ", type);
     switch(type){
       case 1: $state.go('prevention'); break;
       case 2: $state.go('emergency'); break;
