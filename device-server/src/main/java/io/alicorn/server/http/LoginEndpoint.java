@@ -116,13 +116,23 @@ public class LoginEndpoint {
         }
 
         if (user != null && user.getKey().equals(hash(key))) {
-            if (emailToTokenMap.containsKey(email)) {
-                return new WebserviceResponse().set("token", emailToTokenMap.get(email)).toString();
-            } else {
-                String uuid = UUID.randomUUID().toString();
-                emailToTokenMap.put(email, uuid);
-                tokenToUserMap.put(uuid, user);
-                return new WebserviceResponse().set("token", uuid).toString();
+            try {
+                if (emailToTokenMap.containsKey(email)) {
+                    return new WebserviceResponse()
+                            .set("token", emailToTokenMap.get(email))
+                            .set("user", Json.parse(objectMapper.writeValueAsString(user)).asObject().remove("key"))
+                            .toString();
+                } else {
+                    String uuid = UUID.randomUUID().toString();
+                    emailToTokenMap.put(email, uuid);
+                    tokenToUserMap.put(uuid, user);
+                    return new WebserviceResponse()
+                            .set("token", uuid)
+                            .set("user", Json.parse(objectMapper.writeValueAsString(user)).asObject().remove("key"))
+                            .toString();
+                }
+            } catch (Exception e) {
+                return new WebserviceResponse().addError(e.getMessage()).toString();
             }
         } else {
             return new WebserviceResponse().addError("Specified user does not exist or an incorrect password was given.").toString();
