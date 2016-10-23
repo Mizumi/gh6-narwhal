@@ -20,8 +20,16 @@ package io.alicorn.device.client;
 
 import io.alicorn.device.client.grove.DisplayTools;
 import io.alicorn.device.client.i2c.I2CNativeLinuxBacking;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Runtime for an Alicorn IoT device client. Due to hackathon code and time
@@ -40,12 +48,30 @@ public class DeviceClient {
     public static final int DISPLAY_WIDTH = 16;
     public static final int DISPLAY_HEIGHT = 2;
 
-    public static void transform3xWrite(byte[] command) {
+    private static void transform3xWrite(byte[] command) {
         assert command.length % 3 == 0;
         for (int i = 0; i < command.length; i += 3) {
-            logger.info("Writing to address: " + command[i]);
             i2c.write(command[i], new byte[]{command[i + 1], command[i + 2]}, 2);
         }
+    }
+
+    private static String apacheHttpEntityToString(HttpEntity entity) {
+        try {
+            if (entity != null) {
+                String encoding = "UTF-8";
+                if (entity.getContentEncoding() != null) {
+                    encoding = entity.getContentEncoding().getValue();
+                    encoding = encoding == null ? "UTF-8" : encoding;
+                }
+                return EntityUtils.toString(entity, encoding);
+            } else {
+                logger.error("Cannot parse a null ApacheHttpEntity.");
+            }
+        } catch (IOException e) {
+            logger.error("Unexpected IO error when parsing entity content [" + e.getMessage() + "].", e);
+        }
+
+        return "";
     }
 
     public static void main(String[] args) {
@@ -55,10 +81,69 @@ public class DeviceClient {
         transform3xWrite(DisplayTools.commandForColor(100, 50, 150));
 
         // Setup text information.
-        transform3xWrite(DisplayTools.commandForText("Sup Fam"));
+//        transform3xWrite(DisplayTools.commandForText("Sup Fam"));
 
+        class StringWrapper {
+            public String string = "";
+        } final StringWrapper string = new StringWrapper();
+
+        // Text Handler.
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String latestString = "";
+                String outputStringLine1Complete = "";
+                long outputStringLine1Cursor = 1;
+                int outputStringLine1Mask = 0;
+                String outputStringLine2 = "";
+
+                while (true) {
+                    if (!latestString.equals(string.string)) {
+                        latestString = string.string;
+                        String[] latestStrings = latestString.split("::");
+                        outputStringLine1Complete = latestStrings[0];
+                        outputStringLine1Mask = outputStringLine1Complete.length();
+                        outputStringLine1Cursor = 0;
+
+                        // Trim second line to a length of sixteen.
+                        outputStringLine2 = latestStrings.length > 1 ? latestStrings[1] : "";
+                        if (outputStringLine2.length() > 16) {
+                            outputStringLine2 = outputStringLine2.substring(0, 16);
+                        }
+                    }
+
+                    StringBuilder outputStringLine1 = new StringBuilder();
+                    if (outputStringLine1Complete.length() > 0) {
+                        long cursor = outputStringLine1Cursor;
+                        for (int i = 0; i < 16; i++) {
+                            outputStringLine1.append(outputStringLine1Complete.charAt((int) (cursor % outputStringLine1Mask)));
+                            cursor += 1;
+                        }
+                        outputStringLine1Cursor += 1;
+                    } else {
+                        outputStringLine1.append("                ");
+                    }
+
+                    try {
+                        transform3xWrite(DisplayTools.commandForText(outputStringLine1.toString() + outputStringLine2));
+                        Thread.sleep(400);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        thread.start();
+
+        // Event Handler
         while (true) {
             try {
+                String url = "http://169.254.75.84:9789/api/iot/narwhalText";
+                HttpClient client = HttpClientBuilder.create().build();
+                HttpGet request = new HttpGet(url);
+                HttpResponse response = client.execute(request);
+                string.string = apacheHttpEntityToString(response.getEntity());
+
                 Thread.sleep(1000);
             } catch (Exception e) {
                 e.printStackTrace();

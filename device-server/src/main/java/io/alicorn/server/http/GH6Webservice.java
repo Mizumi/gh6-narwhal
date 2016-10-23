@@ -42,6 +42,9 @@ public class GH6Webservice {
     protected ServiceEndpoint serviceEndpoint;
 
     @Inject
+    protected IotEndpoint iotEndpoint;
+
+    @Inject
     public GH6Webservice(SparkWrapper sparkWrapper) {
         logger.info("Webservice started.");
     }
