@@ -18,14 +18,12 @@
  */
 package io.alicorn.data.jongothings;
 
-import io.alicorn.data.jongothings.JongoDriver;
 import io.alicorn.data.models.Agent;
 import io.alicorn.data.models.Client;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Utils for scanning all models in the Mongo database.
@@ -45,7 +43,11 @@ public class UsersDbFacade {
         JongoDriver.getCollection(AGENTS_COLLECTION).update("{email:#}", agent.getEmail()).upsert().with(agent);
     }
 
-    public Agent getAgent(String email) {
+    public Agent getAgent(String uuid) {
+        return JongoDriver.getCollection(AGENTS_COLLECTION).findOne("{uuid:#}", uuid).as(Agent.class);
+    }
+
+    public Agent getAgentByEmail(String email) {
         return JongoDriver.getCollection(AGENTS_COLLECTION).findOne("{email:#}", email).as(Agent.class);
     }
 
@@ -57,7 +59,11 @@ public class UsersDbFacade {
         JongoDriver.getCollection(CLIENTS_COLLECTION).update("{email:#}", client.getEmail()).upsert().with(client);
     }
 
-    public Client getClient(String email) {
+    public Client getClient(String uuid) {
+        return JongoDriver.getCollection(CLIENTS_COLLECTION).findOne("{uuid:#}", uuid).as(Client.class);
+    }
+
+    public Client getClientByEmail(String email) {
         return JongoDriver.getCollection(CLIENTS_COLLECTION).findOne("{email:#}", email).as(Client.class);
     }
 

@@ -27,7 +27,6 @@ import spark.Spark;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +73,11 @@ public class SparkWrapper {
 
         Spark.after((req, res) -> {
             logger.info("Returning {} for {} request for {}", res.body(), req.requestMethod(), req.url());
+        });
+
+        Spark.exception(Exception.class, (e, req, res) -> {
+            logger.error("Spark Error: " + e.getMessage(), e);
+            res.body(new WebserviceResponse().addError(e.getMessage()).toString());
         });
 
         logger.info("Spark Wrapper started.");

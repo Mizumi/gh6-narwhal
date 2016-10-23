@@ -18,6 +18,7 @@
  */
 package io.alicorn;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public class ConfigImpl implements Config {
     @Inject
     public ConfigImpl() {
         try {
-            JsonObject json = JsonObject.readFrom(new FileReader(new File("config.json")));
+            JsonObject json = Json.parse(new FileReader(new File("config.json"))).asObject();
             twilioAccountSID = json.get("twilioAccountSID").asString();
             twilioAuthToken = json.get("twilioAuthToken").asString();
         } catch (IOException e) {

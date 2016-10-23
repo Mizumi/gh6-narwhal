@@ -18,7 +18,6 @@
  */
 package io.alicorn.server.http;
 
-import io.alicorn.server.sms.TwilioSMSClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +37,9 @@ public class GH6Webservice {
 
     @Inject
     protected CocEndpoint cocEndpoint;
+
+    @Inject
+    protected ServiceEndpoint serviceEndpoint;
 
     @Inject
     public GH6Webservice(SparkWrapper sparkWrapper) {

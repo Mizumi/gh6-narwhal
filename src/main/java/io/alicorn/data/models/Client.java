@@ -99,4 +99,16 @@ public class Client extends User {
         return Kind.CLIENT;
 
     }
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
+    public int getNumberOfChildren() {
+        return numberOfChildren;
+    }
+    public void setNumberOfChildren(int numberOfChildren) {
+        this.numberOfChildren = numberOfChildren;
+    }
 }

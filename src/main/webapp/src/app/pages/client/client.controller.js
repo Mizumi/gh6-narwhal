@@ -4,7 +4,12 @@ function ClientController($log, $stateParams, $http) {
   'ngInject';
 
   this.login = function() {
-    $http.post('/api/user/client/login').then(function(res) {
+    var payload = {email: vm.email, key: vm.password};
+    
+    $http.post('/api/user/client/login', payload).then(function(res) {
+      
+      user.token = res.data.token;
+      user.type  = 'client';
 
     });
   }

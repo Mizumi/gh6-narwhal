@@ -1,25 +1,23 @@
-<!-- *
-* Project: gh6
-* Since: Oct 21, 2016
-*
-* Copyright (c) Brandon Sanders [brandon@alicorn.io], Joshua Gagen [joshuagagen@outlook.com],
-*               Edwin Munguia [daiokaio@gmail.com] and Justin Stone
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -->
+<div class="header shade">
+    <div class="headerContainer">
+        <div class="logo"><img src="../../../assets/images/alicorn_logo.png"/></div>
+        <div class="logoText" ng-click="ctrl.logoClick()">Narwhal</div>
+    </div>
+
+    <span class="header-auth">
+        <button type="button" ng-if="ctrl.user.token" ng-click="ctrl.user.token = undefined; ctrl.user.type = undefined" ui-sref="agent">Logout</button>
+
+        <span ng-if="!ctrl.user.token">
+            <button type="button" ui-sref="client">Client Login</button>
+            <button type="button" ui-sref="agent">Agent Login</button>
+        </span>
 
 
-<div class="headerContainer">
-    <div class="logo"><img src="../../../assets/images/alicorn_logo.png"/></div>
-    <div class="logoText" ng-click="vm.logoClick()">Narwhal</div>
+        <div>
+            {{ctrl.user.token}}
+            </br>
+            {{ctrl.user.type}}
+        </div>
+    </span>
+
 </div>
