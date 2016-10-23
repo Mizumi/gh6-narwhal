@@ -1,6 +1,4 @@
-body {
-  height: 100%
-}
+
 
 .emergencyContainer {
 
@@ -42,7 +40,6 @@ body {
     padding: 1em;    
     z-index: 110;
     width: 100%;
-    height: 70vh;
     position: relative;
     left: 0;
     top: 50px;
@@ -66,7 +63,6 @@ body {
 
     //OVERRIDE BOOTSTRAP STUFF
     .container {
-      height: 100%;
       overflow: auto;
       opacity: 0.95;
     }
