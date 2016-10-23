@@ -1,43 +1,71 @@
 .emergencyContainer {
-  min-height: auto;
-  overflow: scroll;
-  max-height: 90%;
-  width: auto;
 
-  background-attachment: fixed !important;
-  background-position: center !important;
-  -webkit-background-size: cover !important;
-  -moz-background-size: cover !important;
-  background-size: cover !important;
-  -o-background-size: cover !important;
-  //background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(/app/assets/img/background.jpg);;
-  background: url(../../../assets/images/gateway_arch.jpg);
+  height: auto;
 
-  .serviceType {
-    padding-right: 10px;
-    text-transform: capitalize;
-    font-size: 20pt;
-    font-family: 'Open Sans', Arial, sans-serif;
-    color: white;
-  }
-
-  //OVERRIDE BOOTSTRAP STUFF
-  .container {
-    max-height: inherit;
-    overflow: auto;
-    opacity: 0.95;
-  }
-
-  .shade {
-    box-shadow: 0 12px 20px (0,0,0,0.90);
-  }
-
-  .title {
-    width: auto;
-    height: 50px;
-    vertical-align: bottom;
-    background-color: #D24D57;
+  img {
+    position: relative;
+    width: 100%;
+    min-height: auto;
     text-align: center;
-    color: #e5e9eb;
+    color: #fff;
+    z-index: 100;
+    background-attachment: fixed !important;
+    background-position: center !important;
+    -webkit-background-size: cover !important;
+    -moz-background-size: cover !important;
+    background-size: cover !important;
+    -o-background-size: cover !important;
+    background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55));
+  }
+
+  //background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(/app/assets/img/background.jpg);;
+  //background: url(../../../assets/images/gateway_arch.jpg);
+
+  .absoluteContainer {
+    z-index: 110;
+    width: 100%;
+    max-height: 800px;
+    height: auto;  //TODO: COME BACK TO THIS
+    position: absolute;
+    left: 0;
+    top: 50px;
+    //background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55));
+
+    ////For Text:
+    //margin-left: auto;
+    //margin-right: auto;
+    //text-align: center;
+    //font-weight: 700;
+    //font-size: 40pt;
+    //color: #e5e9eb;
+
+    .serviceType {
+      padding-right: 10px;
+      text-transform: capitalize;
+      font-size: 20pt;
+      font-family: 'Open Sans', Arial, sans-serif;
+      color: white;
+    }
+
+    //OVERRIDE BOOTSTRAP STUFF
+    .container {
+      max-height: inherit;
+      overflow: auto;
+      opacity: 0.95;
+    }
+
+    .shade {
+      box-shadow: 0 12px 20px (0,0,0,0.90);
+    }
+
+    .title {
+      width: auto;
+      height: 50px;
+      vertical-align: bottom;
+      background-color: #D24D57;
+      text-align: center;
+      color: #e5e9eb;
+    }
+
   }
 }
