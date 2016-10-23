@@ -91,6 +91,11 @@ public class SparkWrapper {
         Spark.after(filter);
     }
 
+    public void put(String path, Route route) {
+        Spark.put(path, route);
+        endpoints.add("PUT >>> " + path);
+    }
+
     public void post(String path, Route route) {
         Spark.post(path, route);
         endpoints.add("POST >>> " + path);
