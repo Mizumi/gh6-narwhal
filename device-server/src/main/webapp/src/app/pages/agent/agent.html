@@ -1,128 +1,130 @@
-<div class="agent-view">
 <gh6-header></gh6-header>
 
-<div ng-if="!agent.user.token">
-    <div class="container">
-        <h1>Welcome, Agent!</h1>
-        <p>This is a simple angular webpack es6 example, compatible with lazy-loading modules.</p>
+<div class="agent-view">
+    <div ng-if="!agent.user.token">
+        <div class="container">
+            <h1>Welcome, Agent!</h1>
+            <p>This is a simple angular webpack es6 example, compatible with lazy-loading modules.</p>
 
-        <form class="gh6-form">
-            <div>
-                <label>E-mail</label>
-                <input ng-model="vm.email"></input>
-            </div>
-            <div>
-                <label>Password</label>
-                <input ng-model="vm.password"></input>
-            </div>
-            <input type="button" ng-click="agent.login()" value="Login"></input>
-            <input type="button" ng-click="agent.register()" value="Register"></input>
-        </form>
-        
+            <form class="gh6-form">
+                <div>
+                    <label>E-mail</label>
+                    <input ng-model="vm.email"></input>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input ng-model="vm.password"></input>
+                </div>
+                <input type="button" ng-click="agent.login()" value="Login"></input>
+                <input type="button" ng-click="agent.register()" value="Register"></input>
+            </form>
+
+        </div>
     </div>
-</div>
 
-<div ng-if="agent.user.token" class="top-buffer">
-    <div class="container">
+    <div ng-if="agent.user.token" class="top-buffer">
+        <div class="container">
 
-        <div class="row coc-info top-buffer shade">
-            <div class="col-lg-8 display-1">
-                <h1 class="display-1">{{agent.user.data.email || "Can't find agent name"}}</h1>
-                
+            <div class="row top-buffer shade">
+                <div class="col-lg-8 display-1">
+                    <h1 class="display-1">{{agent.user.data.email || "Can't find agent name"}}</h1>
+
+                </div>
+                <div class="top-buffer bottom-buffer col-sm-4 light-text">
+                    <span>{{agent.user.data.email}}</span></br>
+                </div>
+
             </div>
-            <div class="top-buffer bottom-buffer col-sm-4 light-text">
-                <span>{{agent.user.data.email}}</span></br>
+
+            <div class="row" role="navigation">
+                <ul class="nav nav-tabs">
+
+                    <li class="nav-item" ng-class="{active: agent.active === 'organizations'}">
+                        <a class="nav-link" ng-click="agent.active = 'organizations'">Organizations</a>
+                    </li>
+
+                    <li class="nav-item" ng-class="{active: agent.active === 'settings'}">
+                        <a class="nav-link" ng-click="agent.active = 'settings'">Settings</a>
+                    </li>
+
+                </ul>
             </div>
 
-        </div>
+            <div class="row" ng-if="agent.active === 'organizations'">
+                <p>Your CoCs</p>
 
-        <div class="row" role="navigation">
-            <ul class="nav nav-tabs">
+                <ul class="list-group">
+                    <li ng-repeat="coc in agent.loadedCocs track by $index" class="list-group-item">
+                            <span class="control-panel" role="group">
 
-                <li class="nav-item" ng-class="{active: agent.active === 'organizations'}">
-                    <a class="nav-link" ng-click="agent.active = 'organizations'">Organizations</a>
-                </li>
+                                <span class="btn-group">
 
-                <li class="nav-item" ng-class="{active: agent.active === 'settings'}">
-                    <a class="nav-link" ng-click="agent.active = 'settings'">Settings</a>
-                </li>
+                                    <a title="View Organization" ui-sref="coc({uuid: coc.uuid })">
+                                        {{coc.contactInfo.name}}
+                                    </a>
 
-            </ul>
-        </div>
-
-        <div class="row" ng-if="agent.active === 'organizations'">
-            <p>Your CoCs</p>
-
-            <ul class="list-group">
-                <li ng-repeat="coc in agent.loadedCocs track by $index" class="list-group-item">
-                        <span class="control-panel" role="group">
-
-                            <span class="btn-group">
-
-                                <a title="View Organization" ui-sref="coc({uuid: coc.uuid })">
-                                    {{coc.contactInfo.name}}
-                                </a>
+                                </span>
 
                             </span>
-                            
-                        </span>
-                    
-                </li>
-                <li class="list-group-item">
-                    <label class="btn btn-primary" ng-click="agent.addCoc = !agent.addCoc">
-                        New Organization
-                    </label>
-                </li>
-            </ul>
-            <div class="control-panel input-group" role="group" ng-if="agent.addCoc">
-                        <div class="form-group">
-                            <label for="firstName">Organization Name</label>
-                            <input type="text" ng-model="agent.orgName" class="form-control" id="firstName" placeholder="Enter name">
-                        </div>
 
-                        <div class="form-group">
-                            <label for="lastName">Organization Email</label>
-                            <input type="text" ng-model="agent.orgEmail" class="form-control" id="lastName" placeholder="Enter email">
-                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <label class="btn btn-primary" ng-click="agent.addCoc = !agent.addCoc">
+                            New Organization
+                        </label>
+                    </li>
+                </ul>
+                <div class="control-panel input-group" role="group" ng-if="agent.addCoc">
+                            <div class="form-group">
+                                <label for="firstName">Organization Name</label>
+                                <input type="text" ng-model="agent.orgName" class="form-control" id="firstName" placeholder="Enter name">
+                            </div>
 
-                        <div class="form-group">
-                            <label for="phoneNumber">Phone Number</label>
-                            <input type="text" ng-model="agent.orgPhone" class="form-control" id="phoneNumber" placeholder="Enter phone number">
+                            <div class="form-group">
+                                <label for="lastName">Organization Email</label>
+                                <input type="text" ng-model="agent.orgEmail" class="form-control" id="lastName" placeholder="Enter email">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phoneNumber">Phone Number</label>
+                                <input type="text" ng-model="agent.orgPhone" class="form-control" id="phoneNumber" placeholder="Enter phone number">
+                            </div>
+
+                            <div class="form-group top-buffer">
+                                <label class="btn btn-primary" ng-click="agent.addOrg(); agent.addCoc = false">
+                                    Add
+                                </label>
+                            </div>
+
+
                         </div>
-                        
-                        <div class="form-group top-buffer">
-                            <label class="btn btn-primary" ng-click="agent.addOrg(); agent.addCoc = false">
-                                Add
-                            </label>
-                        </div>
-                        
-                    
+            </div>
+
+            <div class="row" ng-if="agent.active === 'settings'">
+                <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" ng-model="agent.user.data.email" class="form-control" id="email" placeholder="Enter email">
                     </div>
-        </div>
 
-        <div class="row" ng-if="agent.active === 'settings'">
-            <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" ng-model="agent.user.data.email" class="form-control" id="email" placeholder="Enter email">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" ng-model="agent.user.data.fName" class="form-control" id="firstName" placeholder="Enter first name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" ng-model="agent.user.data.lName" class="form-control" id="lastName" placeholder="Enter last name">
+                    </div>
+                    <label class="btn btn-primary" ng-click="agent.save()">
+                        Save
+                    </label>
+
                 </div>
 
-                <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" ng-model="agent.user.data.fName" class="form-control" id="firstName" placeholder="Enter first name">
-                </div>
-
-                <div class="form-group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" ng-model="agent.user.data.lName" class="form-control" id="lastName" placeholder="Enter last name">
-                </div>
-                <label class="btn btn-primary" ng-click="agent.save()">
-                    Save
-                </label>
-                
             </div>
 
         </div>
-        
     </div>
 </div>
-</div>
+
+<gh6-footer></gh6-footer>

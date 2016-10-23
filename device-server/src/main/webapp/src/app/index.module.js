@@ -30,7 +30,8 @@ const App = angular.module(
     require("./pages/main/main.module").name,
     require("./pages/client/client.module").name,
     require("./pages/agent/agent.module").name,
-    require("./pages/coc/coc.module").name
+    require("./pages/coc/coc.module").name,
+    require("./pages/emergency/emergency.module").name
 
   ]
 )

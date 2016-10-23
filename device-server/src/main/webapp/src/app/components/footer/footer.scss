@@ -1,6 +1,6 @@
 .footerContainer {
     z-index: 120;
-    position: absolute;
+    //position: absolute;
     bottom: 0;
 
     width: 100%;
@@ -36,10 +36,11 @@
 
     .socialMedia {
       width: 100%;
-      padding-top: 50px;
+      padding-top: 20px;
       display: inline-block;
 
       i {
+        cursor: pointer;
         padding-right: 15px;
         color: #00b3ee;
         font-size: 25pt;
@@ -53,8 +54,8 @@
     }
 
     img {
-      position: absolute;
-      top: 20px;
+      position: relative;
+      //top: 20px;
       margin-left: 50px;
       padding-left: 25px;
       height: 100px;
