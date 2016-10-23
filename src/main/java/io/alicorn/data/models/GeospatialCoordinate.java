@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 
 public class GeospatialCoordinate {
+
     private Double latitude;
     private Double longitude;
 
