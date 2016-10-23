@@ -38,4 +38,5 @@ To build and run the project, clone it down to your system and follow these step
 ## Legal ##
 This project is licensed underneath the BSD License; please find a brief copy and more details within our LICENSE.txt.
 
-***The Alicorn Logo is Copyright (c) 2015 - 2016 Brandon Sanders, All Rights Reserved***
+***The Alicorn Logo is Copyright (c) 2015 - 2016 Brandon Sanders, All Rights Reserved.***
+***The Alicorn Logo may not be used, in any form, without prior written permission from Brandon Sanders.***
