@@ -7,15 +7,17 @@ function routeConfig($stateProvider) {
 
   $stateProvider
     .state('coc', {
-      url: '/coc/:id',
+      url: '/coc/:uuid',
       templateUrl: cocTpl,
       controller: require('./coc.controller'),
       controllerAs: 'coc',
       resolve: {
         loadedCoc: function($stateParams, $http, user) {
-          return $http.get('/api/coc/' + $stateParams.id)
+          return $http.get('/api/cocs/' + $stateParams.uuid, {timeout: 5000})
           .then(function(res) {
-            return res.data;
+            return res.data.coc;
+          }).catch(function(res) {
+            return null;
           });
         }
       }

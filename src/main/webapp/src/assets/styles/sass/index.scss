@@ -13,7 +13,15 @@ body {
 .gh6-form {
   label {
     width: 400px;
-  } 
+  }
+}
+
+.shade {
+  box-shadow: 0 2px 20px rgba(0,0,0,0.12);
+}
+
+.light-text {
+  color: rgb(140,140,140);
 }
 
 ul {
@@ -22,3 +30,30 @@ ul {
     margin-left: none;
   }
 }
+
+.top-buffer { margin-top:20px; }
+.bottom-buffer { margin-bottom:20px; }
+.buffer { margin:20px; }
+
+.outline {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.header-title {
+  cursor: pointer;
+}
+
+.header-auth {
+    position: absolute;
+    right: 1em;
+    top: 1em;
+    button {
+      background-color: rgb(240, 240, 240);
+
+      border: 0;
+      font-size: 1.2em;
+      font-weight: 100;
+      padding: 0.5em;
+    }
+  }

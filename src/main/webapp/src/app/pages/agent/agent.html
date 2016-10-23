@@ -25,13 +25,13 @@
         <p>Your CoCs</p>
 
         <ul class="list-group">
-            <li ng-repeat="coc in agent.cocs track by $index" class="list-group-item">
+            <li ng-repeat="coc in agent.loadedCocs track by $index" class="list-group-item">
                     <span class="control-panel" role="group">
 
-                        <span class="btn-group col-lg-6">
+                        <span class="btn-group">
 
-                            <a title="View Organization" ui-sref="coc({uid: coc.uid })">
-                                {{coc.name}}
+                            <a title="View Organization" ui-sref="coc({uuid: coc.uuid })">
+                                {{coc.contactInfo.name}}
                             </a>
 
                         </span>
@@ -39,7 +39,7 @@
                     </span>
                 
             </li>
-            <li class="col-lg-6 list-group-item">
+            <li class="list-group-item">
                 <div class="control-panel input-group" role="group">
                     <input type="text" ng-model="agent.newCocName" class="form-control">
 

@@ -1,11 +1,13 @@
 'use strict';
 
-function AgentController($log, $state, $stateParams, $http, user, $scope) {
+function AgentController($log, $state, $stateParams, $http, user, $scope, loadedCocs) {
   'ngInject';
 
   var vm = this;
 
   vm.user = user;
+  vm.loadedCocs = loadedCocs;
+  console.log(loadedCocs);
 
   vm.cocs = [
     {name: 'coc 1'},
@@ -33,6 +35,17 @@ function AgentController($log, $state, $stateParams, $http, user, $scope) {
     console.log(payload);
     $http.post('/api/user/agent/login', payload).then(function(res) {
       $log('registered:', res);
+    });
+  };
+
+  vm.makeCoc = function() {
+    var payload = {
+      email: vm.email, 
+      key: user.token
+    };
+    console.log(payload);
+    $http.post('/api/coc', payload).then(function(res) {
+      $log('new coc:', res);
     });
   };
 

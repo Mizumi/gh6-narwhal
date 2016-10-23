@@ -11,7 +11,7 @@ function routeConfig($stateProvider) {
       url: '/',
       templateUrl: mainTpl,
       controller: mainCtrl,
-      controllerAs: 'main'
+      controllerAs: 'main',
     });
 
 }

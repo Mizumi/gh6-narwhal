@@ -20,7 +20,7 @@
             
         </div>
     </div>
-    <div class="jumbotron">
+    <div class="jumbotron" ng-if="client.user.token">
         <div class="container">
 
             <div class="client-view-self"  ng-if="client.user.type === 'client'">
