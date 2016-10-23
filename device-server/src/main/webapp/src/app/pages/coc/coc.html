@@ -1,233 +1,236 @@
-<gh6-header></gh6-header>
-<div class="container">
 
-    <div class="row coc-info top-buffer shade">
-        <div class="col-lg-8 display-1">
-            <h1 class="display-1">{{coc.loadedCoc.contactInfo.name || "Can't find CoC name"}}</h1>
-            
+<div class="cocContainer">
+    <div class="container">
+
+        <div class="row coc-info top-buffer shade">
+            <div class="col-lg-8 display-1">
+                <h1 class="display-1">{{coc.loadedCoc.contactInfo.name || "Can't find CoC name"}}</h1>
+
+            </div>
+            <div class="top-buffer bottom-buffer col-sm-4 light-text">
+                <span>{{coc.loadedCoc.contactInfo.address}}</span></br>
+                <span>{{coc.loadedCoc.contactInfo.phoneNumber}}</span></br>
+                <a ng-if="coc.loadedCoc.contactInfo.url" href="{{coc.loadedCoc.contactInfo.url}}">Website</a>
+            </div>
         </div>
-        <div class="top-buffer bottom-buffer col-sm-4 light-text">
-            <span>{{coc.loadedCoc.contactInfo.address}}</span></br>
-            <span>{{coc.loadedCoc.contactInfo.phoneNumber}}</span></br>
-            <a ng-if="coc.loadedCoc.contactInfo.url" href="{{coc.loadedCoc.contactInfo.url}}">Website</a>
+
+        <div class="row" role="navigation" ng-if="coc.user.type === 'agent'">
+            <ul class="nav nav-tabs">
+
+                <li class="nav-item" ng-class="{active: coc.active === 'overview'}">
+                    <a class="nav-link" ng-click="coc.active = 'overview'">Overview</a>
+                </li>
+
+                <li class="nav-item" ng-class="{active: coc.active === 'client'}">
+                    <a class="nav-link" ng-click="coc.active = 'client'">Client Management</a>
+                </li>
+
+                <li class="nav-item" ng-class="{active: coc.active === 'services'}">
+                    <a class="nav-link" ng-click="coc.active = 'services'">Services</a>
+                </li>
+
+                <li class="nav-item" ng-class="{active: coc.active === 'settings'}">
+                    <a class="nav-link" ng-click="coc.active = 'settings'">Settings</a>
+                </li>
+
+            </ul>
         </div>
-    </div>
 
-    <div class="row" role="navigation" ng-if="coc.user.type === 'agent'">
-        <ul class="nav nav-tabs">
+        <div class="row top-buffer outline" ng-if="coc.user.type === 'agent' && coc.active === 'client'">
+            <ul class="col-sm-3 list-group top-buffer">
+                <li class="list-group-item" ng-repeat="client in coc.clientList" ng-click="coc.selectedClient = client; coc.showClientAdder = false">{{client}}</li>
+                <li class="list-group-item" ng-if="!coc.clientList || coc.clientList.length === 0">No clients linked</li>
+                <li class="list-group-item" ng-click="coc.showClientAdder = true; coc.selectedClient = null">Add client</li>
+            </ul>
 
-            <li class="nav-item" ng-class="{active: coc.active === 'overview'}">
-                <a class="nav-link" ng-click="coc.active = 'overview'">Overview</a>
-            </li>
+            <div class="col-md-7 top-buffer">
+                <div ng-if="coc.showClientAdder">
 
-            <li class="nav-item" ng-class="{active: coc.active === 'client'}">
-                <a class="nav-link" ng-click="coc.active = 'client'">Client Management</a>
-            </li>
-
-            <li class="nav-item" ng-class="{active: coc.active === 'services'}">
-                <a class="nav-link" ng-click="coc.active = 'services'">Services</a>
-            </li>
-
-            <li class="nav-item" ng-class="{active: coc.active === 'settings'}">
-                <a class="nav-link" ng-click="coc.active = 'settings'">Settings</a>
-            </li>
-
-        </ul>
-    </div>
-
-    <div class="row top-buffer outline" ng-if="coc.user.type === 'agent' && coc.active === 'client'">
-        <ul class="col-sm-3 list-group top-buffer">
-            <li class="list-group-item" ng-repeat="client in coc.clientList" ng-click="coc.selectedClient = client; coc.showClientAdder = false">{{client}}</li>
-            <li class="list-group-item" ng-if="!coc.clientList || coc.clientList.length === 0">No clients linked</li>
-            <li class="list-group-item" ng-click="coc.showClientAdder = true; coc.selectedClient = null">Add client</li>
-        </ul>
-
-        <div class="col-md-7 top-buffer">
-            <div ng-if="coc.showClientAdder">
-
-                <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" ng-model="coc.email" class="form-control" id="email" placeholder="Enter email">
-                </div>
-
-                <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" ng-model="coc.firstName" class="form-control" id="firstName" placeholder="Enter first name">
-                </div>
-
-                <div class="form-group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" ng-model="coc.lastName" class="form-control" id="lastName" placeholder="Enter last name">
-                </div>
-
-                <div class="form-group">
-                    <label for="phoneNumber">Phone Number</label>
-                    <input type="text" ng-model="coc.phone" class="form-control" id="phoneNumber" placeholder="Enter phone number">
-                </div>
-
-                <div class="form-group">
-                    <label for="ssn">Social Security Number</label>
-                    <div class="form-inline">
-                        <input type="text" ng-model="coc.ssnArea" id="SSNArea" class="form-control input-group input-sm" maxlength="3" width="3" placeholder="XXX" />
-                        <input type="text" ng-model="coc.ssnGroup" id="SSNGroup" class="form-control input-group input-sm" maxlength="2" placeholder="XX" />
-                        <input type="text" ng-model="coc.ssnSerial" id="SSNSerial" class="form-control input-group input-sm" maxlength="4" placeholder="XXX" />
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" ng-model="coc.email" class="form-control" id="email" placeholder="Enter email">
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="ssn">Birthday</label>
-                    <div class="form-inline">
-                        <input type="text" ng-model="coc.bMonth" id="bMonth" class="form-control input-group input-sm" maxlength="2" placeholder="MM" />
-                        <input type="text" ng-model="coc.bDay" id="bDay" class="form-control input-group input-sm" maxlength="2" placeholder="DD" />
-                        <input type="text" ng-model="coc.bYear" id="bYear" class="form-control input-group input-sm" maxlength="4" placeholder="YYYY" />
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" ng-model="coc.firstName" class="form-control" id="firstName" placeholder="Enter first name">
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="ethnicity">Ethnicity</label>
-                    <input type="text" ng-model="coc.ethnicity" class="form-control" id="ethnicity" placeholder="Ethnicity">
-                </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" ng-model="coc.lastName" class="form-control" id="lastName" placeholder="Enter last name">
+                    </div>
 
-                <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <input type="text" ng-model="coc.gender" class="form-control" id="gender" placeholder="Gender">
-                </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="text" ng-model="coc.phone" class="form-control" id="phoneNumber" placeholder="Enter phone number">
+                    </div>
 
-                <div class="form-group">
-                    <label for="gender">Veteran</label>
-                    <div class="input-group">
+                    <div class="form-group">
+                        <label for="ssn">Social Security Number</label>
+                        <div class="form-inline">
+                            <input type="text" ng-model="coc.ssnArea" id="SSNArea" class="form-control input-group input-sm" maxlength="3" width="3" placeholder="XXX" />
+                            <input type="text" ng-model="coc.ssnGroup" id="SSNGroup" class="form-control input-group input-sm" maxlength="2" placeholder="XX" />
+                            <input type="text" ng-model="coc.ssnSerial" id="SSNSerial" class="form-control input-group input-sm" maxlength="4" placeholder="XXX" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ssn">Birthday</label>
+                        <div class="form-inline">
+                            <input type="text" ng-model="coc.bMonth" id="bMonth" class="form-control input-group input-sm" maxlength="2" placeholder="MM" />
+                            <input type="text" ng-model="coc.bDay" id="bDay" class="form-control input-group input-sm" maxlength="2" placeholder="DD" />
+                            <input type="text" ng-model="coc.bYear" id="bYear" class="form-control input-group input-sm" maxlength="4" placeholder="YYYY" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ethnicity">Ethnicity</label>
+                        <input type="text" ng-model="coc.ethnicity" class="form-control" id="ethnicity" placeholder="Ethnicity">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <input type="text" ng-model="coc.gender" class="form-control" id="gender" placeholder="Gender">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Veteran</label>
+                        <div class="input-group">
                         <span class="input-group-addon">
                             <input type="checkbox" ng-model="coc.veteran">
                         </span>
-                        <span type="text" class="form-control" aria-label="Text input with checkbox">Check if client is a veteran</span>
+                            <span type="text" class="form-control" aria-label="Text input with checkbox">Check if client is a veteran</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="vetranStatus">Veteran Status</label>
-                    <input type="text" ng-model="coc.vetranStatus" class="form-control" id="vetranStatus" placeholder="Veteran Status">
-                </div>
-
-                <div class="form-group">
-                    <label for="children">Children</label>
-                    <input type="text" ng-model="coc.children" class="form-control" id="children" placeholder="Number of Children">
-                </div>
-
-                <div class="form-group">
-                    <label for="vetranStatus">Marital Status</label>
-                    <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-primary marital-status-radio active" data-single>
-                            <input type="radio" name="options" autocomplete="off" ng-click="coc.maritalStatus = 'single'" checked> Single
-                        </label>
-                        <label class="btn btn-primary marital-status-radio" data-married>
-                            <input type="radio" name="options" autocomplete="off" ng-click="coc.maritalStatus = 'married'"> Married
-                        </label>
+                    <div class="form-group">
+                        <label for="vetranStatus">Veteran Status</label>
+                        <input type="text" ng-model="coc.vetranStatus" class="form-control" id="vetranStatus" placeholder="Veteran Status">
                     </div>
-                </div>
 
+                    <div class="form-group">
+                        <label for="children">Children</label>
+                        <input type="text" ng-model="coc.children" class="form-control" id="children" placeholder="Number of Children">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vetranStatus">Marital Status</label>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary marital-status-radio active" data-single>
+                                <input type="radio" name="options" autocomplete="off" ng-click="coc.maritalStatus = 'single'" checked> Single
+                            </label>
+                            <label class="btn btn-primary marital-status-radio" data-married>
+                                <input type="radio" name="options" autocomplete="off" ng-click="coc.maritalStatus = 'married'"> Married
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div ng-if="coc.selectedClient && !coc.showClientAdder">Modify clients in this form</div>
             </div>
-            <div ng-if="coc.selectedClient && !coc.showClientAdder">Modify clients in this form</div>
-        </div>
-    </div>
-
-    <div ng-if="coc.active === 'settings'">
-        <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" ng-model="coc.email" class="form-control" id="email" placeholder="Enter email">
         </div>
 
-        <div class="form-group">
-            <label for="firstName">Organization Name</label>
-            <input type="text" ng-model="coc.firstName" class="form-control" id="firstName" placeholder="Enter organization name">
-        </div>
+        <div ng-if="coc.active === 'settings'">
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" ng-model="coc.email" class="form-control" id="email" placeholder="Enter email">
+            </div>
 
-        <div class="form-group">
-            <label for="phoneNumber">Phone Number</label>
-            <input type="text" ng-model="coc.phone" class="form-control" id="phoneNumber" placeholder="Enter phone number">
-        </div>
+            <div class="form-group">
+                <label for="firstName">Organization Name</label>
+                <input type="text" ng-model="coc.firstName" class="form-control" id="firstName" placeholder="Enter organization name">
+            </div>
 
-        <div class="form-group top-buffer">
-            <label class="btn btn-primary" ng-click="agent.addOrg(); agent.addCoc = false">
-                Add
-            </label>
-        </div>
-    </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="text" ng-model="coc.phone" class="form-control" id="phoneNumber" placeholder="Enter phone number">
+            </div>
 
-    <div class="row" ng-if="coc.user.type !== 'agent' || coc.user.type === 'agent' && coc.active === 'overview'">
-        <div class="col-md-6">
-            <h4>This CoC organization offers these services</h4>
-            <ul class="list-group">
-                <li class="list-group-item" ng-repeat="service in coc.loadedCoc.services">{{service.serviceType}}</li>
-            </ul>
-        </div>
-        <div class="col-md-6">
-            <h4>This CoC organization specializes in these areas</h4>
-            <ul class="list-group">
-                <li class="list-group-item" ng-repeat="specialty in coc.loadedCoc.specialties">{{specialty}}</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="row" ng-if="coc.active === 'services'">
-        <div class="col-md-6">
-            <h3>Services provided by this organization</h3>
-            <ul class="list-group">
-                <li class="list-group-item" ng-class="{active: coc.service === 'shelter'}" ng-click="coc.service = 'shelter'">
-                    <i class="fa fa-bed btn btn-secondary"></i> Shelter 
-                </li>
-                <li class="list-group-item" ng-class="{active: coc.service === 'food'}" ng-click="coc.service = 'food'">
-                    <i class="fa fa-cutlery btn btn-secondary"></i> Food 
-                </li>
-                <li class="list-group-item" ng-class="{active: coc.service === 'heath'}" ng-click="coc.service = 'heath'">
-                    <i class="fa fa-medkit btn btn-secondary"></i> Health 
-                </li>
-                <li class="list-group-item" ng-class="{active: coc.service === 'education'}" ng-click="coc.service = 'education'">
-                    <i class="fa fa-graduation-cap btn btn-secondary"></i> Education 
-                </li>
-                <li class="list-group-item" ng-class="{active: coc.service === 'employment'}" ng-click="coc.service = 'employment'">
-                    <i class="fa fa-wrench btn btn-secondary"></i> Employment 
-                </li>
-                <li class="list-group-item" ng-class="{active: coc.service === 'prevention'}" ng-click="coc.service = 'prevention'">
-                    <i class="fa fa-ban btn btn-secondary"></i> Prevention 
-                </li>
-            </ul>
-        </div>
-
-        <div class="col-md-6 top-buffer">
-
-            <div ng-if="coc.service === 'shelter'">
-                <div class="form-group">
-                    <label for="email">Beds Available</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter number of beds available">
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Message</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter message">
-                </div>
-
-                <label class="btn btn-primary">
-                    Save
+            <div class="form-group top-buffer">
+                <label class="btn btn-primary" ng-click="agent.addOrg(); agent.addCoc = false">
+                    Add
                 </label>
             </div>
+        </div>
 
-            <div ng-if="coc.service === 'food'">
-                <div class="form-group">
-                    <label for="email">Meals Available</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter number of meals available">
-                </div>
+        <div class="row" ng-if="coc.user.type !== 'agent' || coc.user.type === 'agent' && coc.active === 'overview'">
+            <div class="col-md-6">
+                <h4>This CoC organization offers these services</h4>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="service in coc.loadedCoc.services">{{service.serviceType}}</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h4>This CoC organization specializes in these areas</h4>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="specialty in coc.loadedCoc.specialties">{{specialty}}</li>
+                </ul>
+            </div>
+        </div>
 
-                <div class="form-group">
-                    <label for="email">Meal</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter the meal served">
-                </div>
-
-                <label class="btn btn-primary">
-                    Save
-                </label>
+        <div class="row" ng-if="coc.active === 'services'">
+            <div class="col-md-6">
+                <h3>Services provided by this organization</h3>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-class="{active: coc.service === 'shelter'}" ng-click="coc.service = 'shelter'">
+                        <i class="fa fa-bed btn btn-secondary"></i> Shelter
+                    </li>
+                    <li class="list-group-item" ng-class="{active: coc.service === 'food'}" ng-click="coc.service = 'food'">
+                        <i class="fa fa-cutlery btn btn-secondary"></i> Food
+                    </li>
+                    <li class="list-group-item" ng-class="{active: coc.service === 'heath'}" ng-click="coc.service = 'heath'">
+                        <i class="fa fa-medkit btn btn-secondary"></i> Health
+                    </li>
+                    <li class="list-group-item" ng-class="{active: coc.service === 'education'}" ng-click="coc.service = 'education'">
+                        <i class="fa fa-graduation-cap btn btn-secondary"></i> Education
+                    </li>
+                    <li class="list-group-item" ng-class="{active: coc.service === 'employment'}" ng-click="coc.service = 'employment'">
+                        <i class="fa fa-wrench btn btn-secondary"></i> Employment
+                    </li>
+                    <li class="list-group-item" ng-class="{active: coc.service === 'prevention'}" ng-click="coc.service = 'prevention'">
+                        <i class="fa fa-ban btn btn-secondary"></i> Prevention
+                    </li>
+                </ul>
             </div>
 
-        </div>
-    </div>
+            <div class="col-md-6 top-buffer">
 
+                <div ng-if="coc.service === 'shelter'">
+                    <div class="form-group">
+                        <label for="email">Beds Available</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter number of beds available">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Message</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter message">
+                    </div>
+
+                    <label class="btn btn-primary">
+                        Save
+                    </label>
+                </div>
+
+                <div ng-if="coc.service === 'food'">
+                    <div class="form-group">
+                        <label for="email">Meals Available</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter number of meals available">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Meal</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter the meal served">
+                    </div>
+
+                    <label class="btn btn-primary">
+                        Save
+                    </label>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 </div>
+

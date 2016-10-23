@@ -8,6 +8,7 @@ function MainController($log, $state) {
   };
 
   this.mainCategoryLink = function(type){
+    console.log("we are here ", type);
     switch(type){
       case 1: $state.go('prevention'); break;
       case 2: $state.go('emergency'); break;
@@ -15,6 +16,11 @@ function MainController($log, $state) {
       default: $state.go('contact'); break; //<-- We should not be here, but eh.
     }
   };
+
+  this.getMagicHeight = function(){
+    //console.log("we are here and height is:", $('#mainSplashImage').css('height'));
+    return $('#mainSplashImage').css('height');
+  }
 
 }
 
