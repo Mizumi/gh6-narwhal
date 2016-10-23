@@ -16,6 +16,11 @@ function MainController($log, $state) {
     }
   };
 
+  this.getMagicHeight = function(){
+    console.log("we are here");
+    return $('#mainSplashImage').css('height');
+  }
+
 }
 
 export default MainController;
