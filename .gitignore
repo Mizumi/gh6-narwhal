@@ -1,9 +1,11 @@
+.DS_Store
 .idea
 .gradle
 build
 *config.json
 *manifest.json
 *npm-debug.log
-target
+target/
+device-client/target/
 node_modules
 *.iml

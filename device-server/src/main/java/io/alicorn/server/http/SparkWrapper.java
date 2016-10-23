@@ -50,7 +50,7 @@ public class SparkWrapper {
     @Inject
     public SparkWrapper() {
         Spark.port(9789);
-        Spark.externalStaticFileLocation("src/main/webapp/dist");
+        Spark.externalStaticFileLocation("device-server/src/main/webapp/dist");
 
         Spark.get("/api/endpoints", (req, res) -> {
             res.type("text/html");
