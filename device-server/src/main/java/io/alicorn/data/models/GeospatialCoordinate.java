@@ -23,14 +23,4 @@ public class GeospatialCoordinate {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
-
-//    public void serialize();
-
-    public JsonObject toJson() {
-        return new JsonObject()
-                .set("type", "Point")
-                .set("coordinates", new JsonArray()
-                        .add(longitude)
-                        .add(latitude));
-    }
 }
