@@ -64,5 +64,14 @@ public class CocEndpoint {
             });
             return new WebserviceResponse().set("cocs", cocs).toString();
         });
+
+        // TODO: JOOOOOOOOOOOSH
+        sparkWrapper.get("/api/coc/getCocByService", (req, res) -> {
+            cocDbFacade.getAllContinuum().forEachRemaining((coc) -> {
+
+            });
+
+            return "";
+        });
     }
 }

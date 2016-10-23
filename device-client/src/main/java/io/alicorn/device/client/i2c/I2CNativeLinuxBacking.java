@@ -1,4 +1,4 @@
-package io.alicorn.device.client;
+package io.alicorn.device.client.i2c;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

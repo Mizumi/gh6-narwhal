@@ -1,4 +1,4 @@
-package io.alicorn.device.client;
+package io.alicorn.device.client.grove;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,8 @@ import java.util.List;
 public class DisplayTools {
 
     // Device I2C Adress (note this only uses the lower 7 bits)
-    public static final int LCD_ADDRESS  =   (0x7c>>1); //  11 1110  0x3E
-    public static final int RGB_ADDRESS  =   (0xc4>>1); // 110 0010  0x62
+    public static final byte LCD_ADDRESS  = 0x3E;
+    public static final byte RGB_ADDRESS  = 0x62;
 
     // color define
     public static final int WHITE       =    0;
@@ -82,12 +82,12 @@ public class DisplayTools {
      */
     public static final byte[] commandForColor(byte r, byte g, byte b) {
         return new byte[]{
-                (byte) ((RGB_ADDRESS << 1)), (byte) 0, (byte) 0,
-                (byte) ((RGB_ADDRESS << 1)), (byte) 1, (byte) 0,
-                (byte) ((RGB_ADDRESS << 1)), (byte) 0x08, (byte) 0xaa,
-                (byte) ((RGB_ADDRESS << 1)), (byte) 4, r,
-                (byte) ((RGB_ADDRESS << 1)), (byte) 3, g,
-                (byte) ((RGB_ADDRESS << 1)), (byte) 2, b
+                RGB_ADDRESS, (byte) 0, (byte) 0,
+                RGB_ADDRESS, (byte) 1, (byte) 0,
+                RGB_ADDRESS, (byte) 0x08, (byte) 0xaa,
+                RGB_ADDRESS, (byte) 4, r,
+                RGB_ADDRESS, (byte) 3, g,
+                RGB_ADDRESS, (byte) 2, b
         };
     }
 
@@ -118,17 +118,17 @@ public class DisplayTools {
         List<Byte> bytes = new ArrayList<Byte>();
 
         //Clear display.
-        bytes.add((byte) ((LCD_ADDRESS << 1)));
+        bytes.add(LCD_ADDRESS);
         bytes.add((byte) LCD_SETDDRAMADDR);
         bytes.add((byte) LCD_CLEARDISPLAY);
 
         //Display on, no cursor.
-        bytes.add((byte) ((LCD_ADDRESS << 1)));
+        bytes.add(LCD_ADDRESS);
         bytes.add((byte) LCD_SETDDRAMADDR);
         bytes.add((byte) ((byte) LCD_DISPLAYCONTROL | (byte) LCD_ENTRYMODESET));
 
         //Two lines.
-        bytes.add((byte) ((LCD_ADDRESS << 1)));
+        bytes.add(LCD_ADDRESS);
         bytes.add((byte) LCD_SETDDRAMADDR);
         bytes.add((byte) LCD_TWO_LINES);
 
@@ -142,7 +142,7 @@ public class DisplayTools {
                 if (row == 2) break;
 
                 //Write a thing. TODO: What's the thing?
-                bytes.add((byte) ((LCD_ADDRESS << 1)));
+                bytes.add(LCD_ADDRESS);
                 bytes.add((byte) LCD_SETDDRAMADDR);
                 bytes.add((byte) 0xc0);
 
@@ -152,7 +152,7 @@ public class DisplayTools {
             count += 1;
 
             //Write chars.
-            bytes.add((byte) ((LCD_ADDRESS << 1)));
+            bytes.add(LCD_ADDRESS);
             bytes.add((byte) LCD_SETCGRAMADDR);
             bytes.add((byte) ((int) c)); //TODO: Is this equiv. to Python's ord()?
         }
