@@ -18,6 +18,8 @@
  */
 package io.alicorn.device.client;
 
+import io.alicorn.device.client.grove.DisplayTools;
+import io.alicorn.device.client.i2c.I2CNativeLinuxBacking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,9 @@ public class DeviceClient {
     // Create a connection to the native Linux I2C lines.
     private static final I2CNativeLinuxBacking i2c = new I2CNativeLinuxBacking((byte)1);
 
+    public static final int DISPLAY_WIDTH = 16;
+    public static final int DISPLAY_HEIGHT = 2;
+
     public static void transform3xWrite(byte[] command) {
         assert command.length % 3 == 0;
         for (int i = 0; i < command.length; i += 3) {
@@ -46,8 +51,10 @@ public class DeviceClient {
     public static void main(String[] args) {
         logger.info("Starting Alicorn Client System");
 
-        // Write text to the LCD display.
+        // Prepare Display Color.
         transform3xWrite(DisplayTools.commandForColor(100, 50, 150));
+
+        // Setup text information.
         transform3xWrite(DisplayTools.commandForText("Sup Fam"));
 
         while (true) {
@@ -57,46 +64,5 @@ public class DeviceClient {
                 e.printStackTrace();
             }
         }
-
-//        logger.info("Starting Wii Nunchuck example application.");
-//
-//        // Write 0x40 and 0x00 to initialize the nunchuck.
-//        logger.info("Initializing Nunchuck.");
-//        i2c.write(NUNCHUCK_ADDR, new byte[]{(byte)0x40, (byte) 0x00},2);
-//        logger.info("Nunchuck initialized.");
-//
-//        // Loop forever, reading from the nunchuck.
-//        System.out.println("#### Wii Nunchuck Tracking Data ####");
-//        System.out.println("");
-//        byte[] response;
-//        while (true) {
-//            // Write 0x00 to the nunchuck to request data.
-//            i2c.write(NUNCHUCK_ADDR, new byte[]{(byte) 0x00},1);
-//
-//            // Read the 6-byte response from the nunchuck.
-//            response = i2c.read(NUNCHUCK_ADDR, new byte[6], 6);
-//
-//            // Decode response by XOR 0x17 and add 0x17.
-//            for (int i = 0; i < response.length; i++) {
-//                response[i] = (byte) ((response[i] ^ 0x17) + 0x17);
-//            }
-//
-//            // Clear the most recent line so that we don't spew out tons of lines of content.
-//            System.out.print("\r");
-//            for (int i = 0; i < 100; i++) System.out.print(" ");
-//            System.out.print("\r");
-//
-//            // Print out tracking data.
-//            System.out.print(String.format("Stick (X %d Y %d) | Gyro (X %d Y %d Z %d) | Buttons (%d)",
-//                                           response[0], response[1], response[2], response[3],
-//                                           response[4], response[5]));
-//
-//            // Sleep for a bit.
-//            try {
-//                Thread.sleep(250);
-//            } catch (Exception e) {
-//                logger.error(e.getMessage(), e);
-//            }
-//        }
     }
 }

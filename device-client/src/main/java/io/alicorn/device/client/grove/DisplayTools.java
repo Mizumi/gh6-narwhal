@@ -1,4 +1,4 @@
-package io.alicorn.device.client;
+package io.alicorn.device.client.grove;
 
 import java.util.ArrayList;
 import java.util.List;

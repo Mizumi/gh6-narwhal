@@ -1,4 +1,4 @@
-package io.alicorn.device.client;
+package io.alicorn.device.client.i2c;
 
 import jnr.ffi.LibraryLoader;
 
