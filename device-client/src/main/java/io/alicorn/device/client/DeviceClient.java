@@ -38,6 +38,7 @@ public class DeviceClient {
     public static void transform3xWrite(byte[] command) {
         assert command.length % 3 == 0;
         for (int i = 0; i < command.length; i += 3) {
+            logger.info("Writing to address: " + command[i]);
             i2c.write(command[i], new byte[]{command[i + 1], command[i + 2]}, 2);
         }
     }
