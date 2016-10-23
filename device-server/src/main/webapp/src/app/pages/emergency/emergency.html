@@ -1,0 +1,30 @@
+<gh6-header></gh6-header>
+
+<div class="emergencyContainer">
+    <img src="../../../assets/images/gateway_arch.jpg"/>
+
+    <div class="absoluteContainer">
+        <h1 class="title">Emergency Services</h1>
+
+        <div class="container">
+
+            <div ng-repeat="coc in emergency.listOfCOC track by $index">
+                <div class="row top-buffer shade">
+                    <div class="col-lg-8 display-1">
+                        <h1 class="display-1">{{coc.name || "Can't find CoC name"}}</h1>
+                        <h4 class="display-1">Services Provided:</h4>
+                <span ng-repeat="service in coc.services">
+                    <span class="serviceType">{{service}}</span>
+                </span>
+                    </div>
+                    <br class="top-buffer bottom-buffer col-sm-4 light-text">
+                    <span>Address: {{coc.address}}</span></br>
+                    <span>Phone: {{coc.phoneNumber}}</span></br>
+                    <span>Hours: {{coc.hours}}</span></br>
+                    <a ng-if="emergency.loadedCoc.contactInfo.url" href="{{coc.loadedCoc.contactInfo.url}}">Website</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

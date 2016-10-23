@@ -11,6 +11,7 @@ import "../assets/styles/sass/coc.scss";
 import "../assets/styles/sass/client.scss";
 import "../assets/styles/sass/main.scss";
 import "../assets/styles/sass/header.scss";
+import "../assets/styles/sass/emergency.scss";
 
 angular.element(document).ready(function () {
   angular.bootstrap(document, ['app'], {
