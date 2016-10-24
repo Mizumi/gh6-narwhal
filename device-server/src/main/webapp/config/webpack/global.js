@@ -37,7 +37,7 @@ module.exports = function(_path) {
       hot: true,
       inline: true,
       proxy: {
-        "/api/*": 'http://192.168.1.93:9789'
+        "/api/*": 'http://localhost:9789'
       }
       // proxy: {
       //   '/api': {

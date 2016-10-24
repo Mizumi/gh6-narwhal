@@ -78,7 +78,7 @@ public class DeviceClient {
         logger.info("Starting Alicorn Client System");
 
         // Prepare Display Color.
-        transform3xWrite(DisplayTools.commandForColor(100, 50, 150));
+        transform3xWrite(DisplayTools.commandForColor(0, 204, 255));
 
         // Setup text information.
 //        transform3xWrite(DisplayTools.commandForText("Sup Fam"));
@@ -138,7 +138,7 @@ public class DeviceClient {
         // Event Handler
         while (true) {
             try {
-                String url = "http://169.254.75.84:9789/api/iot/narwhalText";
+                String url = "http://169.254.90.174:9789/api/iot/narwhalText";
                 HttpClient client = HttpClientBuilder.create().build();
                 HttpGet request = new HttpGet(url);
                 HttpResponse response = client.execute(request);
